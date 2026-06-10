@@ -1,0 +1,1047 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Star Chef - AI Menu Engine 华住项目 v0.3</title>
+  <style>
+    :root {
+      --ink: #102033;
+      --muted: #475569;
+      --line: #cbd5e1;
+      --brand: #0f5d7e;
+      --brand-2: #11415d;
+      --bg: #eef5f7;
+      --card: #ffffff;
+      --ok: #166534;
+      --ok-bg: #dcfce7;
+      --warn: #92400e;
+      --warn-bg: #fef3c7;
+      --bad: #991b1b;
+      --bad-bg: #fee2e2;
+      --blue-bg: #e0f2fe;
+      --blue: #075985;
+      --purple: #6d28d9;
+      --purple-bg: #f3e8ff;
+    }
+    * { box-sizing: border-box; }
+    html { overflow-x: hidden; }
+    body {
+      margin: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Microsoft YaHei", Arial, sans-serif;
+      color: var(--ink);
+      background: var(--bg);
+      font-size: 17px;
+      line-height: 1.45;
+      overflow-x: hidden;
+    }
+    header {
+      background: linear-gradient(135deg, var(--brand), var(--brand-2));
+      color: #fff;
+      padding: 22px 28px;
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      box-shadow: 0 8px 24px rgba(15, 23, 42, .18);
+    }
+    header h1 { margin: 0; font-size: 30px; letter-spacing: .2px; }
+    header h1 span { display: inline; }
+    header h1 span + span::before { content: " / "; }
+    header p { margin: 6px 0 0; color: #dff5fb; font-size: 16px; }
+    main { max-width: 1440px; margin: 0 auto; padding: 24px; }
+    .toolbar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin: 0 0 18px;
+      align-items: center;
+    }
+    .tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      border-radius: 999px;
+      padding: 7px 12px;
+      font-weight: 700;
+      font-size: 14px;
+      border: 1px solid var(--line);
+      background: #fff;
+      color: var(--ink);
+    }
+    .tag.ok { color: var(--ok); background: var(--ok-bg); border-color: #86efac; }
+    .tag.warn { color: var(--warn); background: var(--warn-bg); border-color: #fcd34d; }
+    .tag.blue { color: var(--blue); background: var(--blue-bg); border-color: #7dd3fc; }
+    .tag.bad { color: var(--bad); background: var(--bad-bg); border-color: #fca5a5; }
+    .tag.purple { color: var(--purple); background: var(--purple-bg); border-color: #c4b5fd; }
+    section {
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      margin: 18px 0;
+      overflow: hidden;
+      box-shadow: 0 14px 34px rgba(15, 23, 42, .08);
+    }
+    .section-head {
+      background: var(--brand);
+      color: #fff;
+      padding: 16px 20px;
+      display: flex;
+      justify-content: space-between;
+      gap: 14px;
+      align-items: center;
+    }
+    .section-head h2 { margin: 0; font-size: 24px; }
+    .section-body { padding: 20px; }
+    .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+    .grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; }
+    .card {
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      padding: 16px;
+      background: #fff;
+      min-height: 120px;
+    }
+    .card h3 { margin: 0 0 10px; font-size: 20px; color: var(--ink); }
+    .card h4 { margin: 0 0 9px; font-size: 17px; color: var(--ink); }
+    .metric { font-size: 38px; line-height: 1.05; font-weight: 900; color: var(--ink); margin: 4px 0 8px; }
+    .note { color: var(--muted); font-size: 15px; }
+    .menu-layout { display: grid; grid-template-columns: 220px 1fr 310px; gap: 16px; align-items: start; }
+    .side {
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      padding: 14px;
+      background: #f8fbfd;
+    }
+    .nav-title { margin: 12px 0 6px; color: var(--muted); font-size: 13px; font-weight: 800; text-transform: uppercase; }
+    .nav-item {
+      border: 1px solid var(--line);
+      background: #fff;
+      color: var(--ink);
+      border-radius: 9px;
+      padding: 10px 12px;
+      margin: 7px 0;
+      font-weight: 800;
+      font-size: 15px;
+    }
+    .nav-item.open { background: var(--brand); color: #fff; border-color: var(--brand); }
+    .nav-item.closed { color: #64748b; background: #e2e8f0; }
+    table { width: 100%; border-collapse: collapse; font-size: 16px; }
+    th {
+      text-align: left;
+      background: #eaf3f7;
+      color: #17324a;
+      border: 1px solid var(--line);
+      padding: 11px;
+      font-size: 15px;
+    }
+    td { border: 1px solid var(--line); padding: 11px; vertical-align: top; }
+    .meal-row strong { font-size: 18px; }
+    .dish-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 12px; }
+    .lane {
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      overflow: hidden;
+      background: #fff;
+      min-height: 300px;
+    }
+    .lane.closed { opacity: .62; background: #f1f5f9; }
+    .lane h3 {
+      margin: 0;
+      padding: 12px 14px;
+      background: var(--brand);
+      color: #fff;
+      font-size: 18px;
+    }
+    .lane.closed h3 { background: #64748b; }
+    .group { padding: 12px; border-bottom: 1px solid #e2e8f0; }
+    .group:last-child { border-bottom: none; }
+    .group-title { font-size: 14px; font-weight: 900; color: #334155; margin-bottom: 8px; }
+    .dish {
+      display: block;
+      padding: 9px 10px;
+      border: 1px solid #cbd5e1;
+      border-radius: 9px;
+      margin: 7px 0;
+      background: #f8fafc;
+      font-size: 15px;
+      font-weight: 700;
+      color: #172033;
+    }
+    .dish small { display: inline-block; color: #475569; font-weight: 700; margin-left: 6px; }
+    .dish.price { background: #f0fdf4; border-color: #86efac; }
+    .dish.warn { background: #fffbeb; border-color: #f59e0b; }
+    .dish.bad { background: #fef2f2; border-color: #ef4444; }
+    .pool {
+      display: grid;
+      grid-template-columns: 1.15fr .85fr;
+      gap: 16px;
+      margin-bottom: 16px;
+    }
+    .pool .dish { display: inline-block; margin: 5px; }
+    .task {
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      padding: 12px;
+      background: #fff;
+      margin: 0 0 10px;
+    }
+    .task b { display: block; margin-bottom: 6px; font-size: 16px; }
+    .legend { display: flex; flex-wrap: wrap; gap: 8px; margin: 12px 0 0; }
+    .highlight {
+      background: #fff7ed;
+      border-left: 5px solid #f97316;
+      padding: 14px 16px;
+      border-radius: 10px;
+      font-weight: 800;
+    }
+    .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+    .review-grid { display: grid; grid-template-columns: 1.2fr .9fr .9fr; gap: 16px; }
+    .checklist { list-style: none; padding: 0; margin: 0; }
+    .checklist li {
+      border: 1px solid #e2e8f0;
+      border-radius: 10px;
+      padding: 11px 12px;
+      margin: 8px 0;
+      background: #f8fafc;
+      font-weight: 750;
+    }
+    .checklist li::before {
+      content: "□";
+      color: var(--brand);
+      font-weight: 900;
+      margin-right: 8px;
+    }
+    .output-card {
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      padding: 16px;
+      background: #fff;
+    }
+    .output-card h3 { margin: 0 0 8px; font-size: 20px; }
+    .output-card .row {
+      display: grid;
+      grid-template-columns: 108px 1fr;
+      gap: 10px;
+      border-top: 1px solid #e2e8f0;
+      padding: 10px 0;
+      font-size: 15px;
+    }
+    .output-card .row:first-of-type { border-top: 0; }
+    .output-card .row b { color: var(--brand); }
+    .status {
+      display: inline-flex;
+      align-items: center;
+      border-radius: 999px;
+      padding: 4px 8px;
+      font-size: 12px;
+      font-weight: 900;
+      white-space: nowrap;
+      border: 1px solid var(--line);
+    }
+    .status.ok { color: var(--ok); background: var(--ok-bg); border-color: #86efac; }
+    .status.warn { color: var(--warn); background: var(--warn-bg); border-color: #fcd34d; }
+    .status.bad { color: var(--bad); background: var(--bad-bg); border-color: #fca5a5; }
+    .v03-system {
+      border: 2px solid #0f5d7e;
+      box-shadow: 0 18px 46px rgba(15, 23, 42, .14);
+    }
+    .v03-kpi-grid {
+      display: grid;
+      grid-template-columns: repeat(6, minmax(0, 1fr));
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+    .v03-kpi {
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      background: #fff;
+      padding: 13px;
+      min-width: 0;
+    }
+    .v03-kpi b {
+      display: block;
+      font-size: 25px;
+      line-height: 1.05;
+      color: var(--brand);
+      margin-bottom: 4px;
+    }
+    .v03-kpi span {
+      display: block;
+      font-weight: 900;
+      color: var(--ink);
+    }
+    .v03-kpi small {
+      display: block;
+      color: var(--muted);
+      margin-top: 6px;
+      font-size: 12px;
+      line-height: 1.35;
+    }
+    .v03-layout {
+      display: grid;
+      grid-template-columns: 1.25fr .75fr;
+      gap: 16px;
+      margin-bottom: 16px;
+    }
+    .v03-panel {
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      background: #fff;
+      padding: 16px;
+    }
+    .v03-panel h3 { margin: 0 0 8px; font-size: 20px; }
+    .v03-input-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 10px;
+      margin-top: 12px;
+    }
+    .v03-input-grid label {
+      display: grid;
+      gap: 6px;
+      font-size: 13px;
+      font-weight: 850;
+      color: #334155;
+    }
+    .v03-input-grid input {
+      width: 100%;
+      border: 1px solid var(--line);
+      border-radius: 9px;
+      padding: 9px 10px;
+      font: inherit;
+      font-weight: 800;
+      color: var(--ink);
+      background: #f8fafc;
+    }
+    .v03-warning-list {
+      display: grid;
+      gap: 8px;
+      margin: 10px 0 12px;
+    }
+    .v03-warning {
+      border: 1px solid #fcd34d;
+      background: #fffbeb;
+      color: #713f12;
+      border-radius: 10px;
+      padding: 10px 11px;
+      font-weight: 800;
+      font-size: 14px;
+    }
+    .v03-output-block {
+      border-top: 1px solid #e2e8f0;
+      padding-top: 16px;
+      margin-top: 16px;
+    }
+    .v03-output-block h3 {
+      margin: 0 0 10px;
+      font-size: 21px;
+      color: var(--ink);
+    }
+    .v03-table-wrap {
+      overflow-x: auto;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      background: #fff;
+    }
+    .v03-table-wrap table { min-width: 980px; }
+    .compact-table { font-size: 14px; }
+    .compact-table td { padding: 9px 10px; }
+    .v03-table-actions {
+      display: flex;
+      justify-content: flex-end;
+      margin: 0 0 8px;
+    }
+    .v03-table-actions button {
+      border: 1px solid #86efac;
+      background: #dcfce7;
+      color: #166534;
+      border-radius: 999px;
+      padding: 8px 12px;
+      font: inherit;
+      font-size: 14px;
+      font-weight: 900;
+      cursor: pointer;
+    }
+    footer { color: #475569; font-size: 14px; padding: 24px 0 36px; }
+    @media (max-width: 1100px) {
+      .grid-3, .grid-4, .dish-grid, .pool, .two-col, .menu-layout, .review-grid, .v03-layout { grid-template-columns: 1fr; }
+      .v03-kpi-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+      .v03-input-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      header h1 { font-size: 24px; }
+      main { padding: 14px; }
+    }
+    @media (max-width: 720px) {
+      body { font-size: 16px; }
+      header { position: static; padding: 18px 16px; }
+      header h1 { font-size: 21px; line-height: 1.22; }
+      header h1 span { display: block; }
+      header h1 span + span::before { content: ""; }
+      header p { font-size: 15px; }
+      header h1,
+      header p,
+      .card,
+      .task,
+      .output-card,
+      .highlight,
+      .dish,
+      td {
+        overflow-wrap: anywhere;
+        word-break: break-word;
+      }
+      main,
+      section,
+      .section-body,
+      .toolbar,
+      .grid-3,
+      .grid-4,
+      .dish-grid,
+      .pool,
+      .two-col,
+      .menu-layout,
+      .review-grid,
+      .card,
+      .side,
+      .output-card,
+      .lane {
+        max-width: 100%;
+        min-width: 0;
+      }
+      .toolbar > *,
+      .grid-3 > *,
+      .grid-4 > *,
+      .dish-grid > *,
+      .pool > *,
+      .two-col > *,
+      .menu-layout > *,
+      .review-grid > * {
+        min-width: 0;
+      }
+      .toolbar { gap: 8px; }
+      .tag {
+        font-size: 13px;
+        padding: 6px 10px;
+        max-width: 100%;
+        white-space: normal;
+        overflow-wrap: anywhere;
+        line-height: 1.25;
+      }
+      .section-head { padding: 14px 15px; align-items: flex-start; flex-direction: column; }
+      .section-head h2 { font-size: 21px; line-height: 1.25; }
+      .section-body { padding: 14px; }
+      .card { min-height: auto; padding: 14px; }
+      .metric { font-size: 34px; }
+      table,
+      thead,
+      tbody,
+      tr,
+      th,
+      td {
+        display: block;
+        width: 100%;
+      }
+      thead { display: none; }
+      tr {
+        border: 1px solid var(--line);
+        border-radius: 12px;
+        background: #fff;
+        margin: 12px 0;
+        overflow: hidden;
+      }
+      td {
+        display: grid;
+        grid-template-columns: 92px 1fr;
+        gap: 10px;
+        border: 0;
+        border-bottom: 1px solid #e2e8f0;
+        padding: 12px;
+        font-size: 15px;
+      }
+      td:last-child { border-bottom: 0; }
+      td::before {
+        color: var(--brand);
+        font-weight: 900;
+      }
+      td:nth-child(1)::before { content: "餐别"; }
+      td:nth-child(2)::before { content: "开放档口"; }
+      td:nth-child(3)::before { content: "关闭档口"; }
+      td:nth-child(4)::before { content: "生成规则"; }
+      td:nth-child(5)::before { content: "管理重点"; }
+      .lane { min-height: auto; }
+      .dish { font-size: 16px; padding: 10px 11px; }
+      .side { padding: 12px; }
+      .output-card .row { grid-template-columns: 1fr; gap: 3px; }
+      .v03-kpi-grid,
+      .v03-input-grid {
+        grid-template-columns: 1fr;
+      }
+      .v03-kpi b { font-size: 23px; }
+      .v03-table-wrap table { min-width: 760px; }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1><span>Star Chef - AI Menu Engine</span><span>华住项目系统原型 v0.3</span></h1>
+    <p>从评审原型进入可计算业务输出：采购口径、备餐任务、目标成本上限和毛利风险。</p>
+  </header>
+
+  <main>
+    <div class="toolbar">
+      <span class="tag blue">项目：华住 · 上海江桥</span>
+      <span class="tag ok">早餐：只开面档</span>
+      <span class="tag ok">午餐：5档齐开</span>
+      <span class="tag ok">晚餐：面档 + 1个炒菜档</span>
+      <span class="tag warn">甜品单独售卖</span>
+      <span class="tag warn">米饭/汤免费自取但计成本</span>
+      <span class="tag purple">v0.3：业务计算版</span>
+    </div>
+
+    <section class="v03-system">
+      <div class="section-head">
+        <h2>v0.3 系统控制台：从菜名展示进入业务计算</h2>
+        <span class="tag purple">严谨口径：事实、假设、缺口分开</span>
+      </div>
+      <div class="section-body">
+        <div id="v03-kpis" class="v03-kpi-grid"></div>
+        <div class="v03-layout">
+          <div id="v03-assumptions"></div>
+          <div id="v03-data-gate"></div>
+        </div>
+        <p class="highlight">v0.3 只输出“目标成本上限”和“风险判断”，不把缺失成本卡的菜伪装成真实毛利。真实毛利必须等售价、成本卡、克重、SOP、供应商报价映射齐全后再计算。</p>
+
+        <div class="v03-output-block">
+          <h3>1. 采购经理采购清单：按菜池去重，不按窗口重复采购</h3>
+          <div id="v03-procurement"></div>
+        </div>
+
+        <div class="v03-output-block">
+          <h3>2. 厨师长备餐任务单：按餐别和开放档口生成</h3>
+          <div id="v03-chef-tasks"></div>
+        </div>
+
+        <div class="v03-output-block">
+          <h3>3. 运营经理毛利风险表：先看数据缺口和目标成本压力</h3>
+          <div id="v03-risk"></div>
+        </div>
+
+        <div class="v03-output-block">
+          <h3>4. 已命中成本卡样本：能说明“成本卡库存在”，但售价桥接还没完成</h3>
+          <div id="v03-cost-examples"></div>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <div class="section-head">
+        <h2>0. v0.2 评审仍要拿到的结论</h2>
+        <span class="tag purple">开会用，不是最终系统</span>
+      </div>
+      <div class="section-body">
+        <div class="review-grid">
+          <div class="card">
+            <h3>今天只确认三件事</h3>
+            <ul class="checklist">
+              <li>档口营业规则是否真实：早餐 1 档、午餐 5 档、晚餐 2 档。</li>
+              <li>菜池和窗口陈列是否真实：采购按菜池，现场按窗口。</li>
+              <li>哪些菜有成本卡/SOP，哪些菜还缺报价、克重或做法。</li>
+            </ul>
+          </div>
+          <div class="card">
+            <h3>已确定的业务规则</h3>
+            <span class="tag ok">米饭/汤免费但计成本</span>
+            <span class="tag ok">甜品单独售卖</span>
+            <span class="tag ok">午餐三炒菜窗口错位陈列</span>
+            <p class="note">这些规则会影响采购量、备餐任务、毛利测算和企业微信确认流。</p>
+          </div>
+          <div class="card">
+            <h3>待补数据</h3>
+            <span class="tag warn">每份克重</span>
+            <span class="tag warn">成本卡匹配</span>
+            <span class="tag warn">SOP 工时</span>
+            <span class="tag bad">供应商最新报价</span>
+            <p class="note">v0.2 不把缺失数据伪装成确定值，先让负责人确认缺口。</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <div class="section-head">
+        <h2>1. 项目工作台：先看今天哪些档口开</h2>
+        <span class="tag ok">按餐别生成菜单</span>
+      </div>
+      <div class="section-body">
+        <div class="grid-3">
+          <div class="card">
+            <h3>早餐</h3>
+            <div class="metric">1档</div>
+            <p class="note">只开面档。早餐品种集中在同一个窗口管理，约 20 个 SKU。</p>
+          </div>
+          <div class="card">
+            <h3>午餐</h3>
+            <div class="metric">5档</div>
+            <p class="note">面档 + 特色档 + 炒菜1 + 炒菜2 + 炒菜3 同时开放。</p>
+          </div>
+          <div class="card">
+            <h3>晚餐</h3>
+            <div class="metric">2档</div>
+            <p class="note">只开面档和一个炒菜档口。特色档、炒菜2、炒菜3关闭。</p>
+          </div>
+        </div>
+
+        <table style="margin-top:18px;">
+          <thead>
+            <tr>
+              <th>餐别</th>
+              <th>开放档口</th>
+              <th>关闭档口</th>
+              <th>系统生成规则</th>
+              <th>给厨师长/采购经理看的重点</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr class="meal-row">
+              <td><strong>早餐</strong></td>
+              <td>面档</td>
+              <td>特色档、炒菜1、炒菜2、炒菜3</td>
+              <td>只生成早餐面档 SKU，不生成炒菜任务。</td>
+              <td>采购看包点、粉面、豆浆、鸡蛋备货；厨师长看出餐速度。</td>
+            </tr>
+            <tr class="meal-row">
+              <td><strong>午餐</strong></td>
+              <td>面档、特色档、炒菜1、炒菜2、炒菜3</td>
+              <td>无</td>
+              <td>炒菜先生成出品菜池，再生成三个窗口错位陈列。</td>
+              <td>采购按菜池算总量；厨师长按窗口确认陈列和人员。</td>
+            </tr>
+            <tr class="meal-row">
+              <td><strong>晚餐</strong></td>
+              <td>面档、炒菜1</td>
+              <td>特色档、炒菜2、炒菜3</td>
+              <td>只生成一个炒菜窗口，不做三窗口错位。</td>
+              <td>采购量按晚餐缩减；关闭档口不推确认任务。</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section>
+      <div class="section-head">
+        <h2>2. 早餐面档：真实品种池</h2>
+        <span class="tag ok">约20个品种</span>
+      </div>
+      <div class="section-body">
+        <div class="grid-4">
+          <div class="card">
+            <h3>包点类</h3>
+            <span class="dish">菜包</span>
+            <span class="dish">肉包</span>
+            <span class="dish">粉丝包</span>
+            <span class="dish">酸豆角包</span>
+            <span class="dish">梅干菜包</span>
+            <span class="dish">红糖馒头</span>
+          </div>
+          <div class="card">
+            <h3>特色点心</h3>
+            <span class="dish">锅贴</span>
+            <span class="dish">鸡蛋饼</span>
+            <span class="dish">灌汤小笼包</span>
+            <span class="dish">牛肉馅饼</span>
+            <span class="dish">芝麻饼</span>
+          </div>
+          <div class="card">
+            <h3>油炸/热食</h3>
+            <span class="dish">油条</span>
+            <span class="dish">麻球</span>
+            <span class="dish">韭菜盒子</span>
+            <span class="dish">烧麦</span>
+            <span class="dish">南瓜发糕</span>
+          </div>
+          <div class="card">
+            <h3>粥饮/鸡蛋</h3>
+            <span class="dish">原味豆浆</span>
+            <span class="dish">咸/甜豆花</span>
+            <span class="dish">大/小馄饨</span>
+            <span class="dish">白煮蛋</span>
+            <span class="dish">茶叶蛋</span>
+            <span class="dish">煎蛋</span>
+          </div>
+        </div>
+        <p class="highlight" style="margin-top:16px;">早餐不需要生成多个档口，只要管理一个面档的 SKU 池、备货量和出餐速度。</p>
+      </div>
+    </section>
+
+    <section>
+      <div class="section-head">
+        <h2>3. 午餐：5档齐开，炒菜采用“菜池 + 窗口陈列”</h2>
+        <span class="tag warn">采购按菜池，现场按窗口</span>
+      </div>
+      <div class="section-body">
+        <div class="menu-layout">
+          <div class="side">
+            <div class="nav-title">午餐开放档口</div>
+            <div class="nav-item open">面档</div>
+            <div class="nav-item open">特色档</div>
+            <div class="nav-item open">炒菜1</div>
+            <div class="nav-item open">炒菜2</div>
+            <div class="nav-item open">炒菜3</div>
+            <div class="nav-title">免费基础项</div>
+            <div class="nav-item">米饭自取</div>
+            <div class="nav-item">汤自取</div>
+          </div>
+
+          <div>
+            <div class="pool">
+              <div class="card">
+                <h3>午餐大荤出品菜池：5个</h3>
+                <span class="dish price">A 黄焖大骨 <small>13元</small></span>
+                <span class="dish price">B 红烧狮子头 <small>8元</small></span>
+                <span class="dish price">C 毛豆香菇炖鸡 <small>10元</small></span>
+                <span class="dish price">D 盐水基围虾 <small>12元</small></span>
+                <span class="dish price">E 辣椒炒肉 <small>10元</small></span>
+                <p class="note">采购和备餐按这 5 个大荤算，不因为多个窗口重复展示而重复计量。</p>
+              </div>
+              <div class="card">
+                <h3>午餐小荤/素菜/甜品</h3>
+                <span class="dish price">葱油鸡蛋糕 <small>5元</small></span>
+                <span class="dish price">鱼香肉丝 <small>6元</small></span>
+                <span class="dish price">糖醋青椒酿肉 <small>6元</small></span>
+                <span class="dish price">黄瓜拌腐竹 <small>3元</small></span>
+                <span class="dish price">韭菜豆芽 <small>3元</small></span>
+                <span class="dish price">清炒空心菜 <small>3元</small></span>
+                <span class="dish warn">酒酿圆子 <small>甜品单售 3元</small></span>
+              </div>
+            </div>
+
+            <div class="dish-grid">
+              <div class="lane">
+                <h3>面档</h3>
+                <div class="group">
+                  <div class="group-title">粉面/汤粉</div>
+                  <span class="dish price">红烧牛肉拉面 <small>26元</small></span>
+                  <span class="dish price">雪菜肉丝面 <small>12元</small></span>
+                  <span class="dish price">红烧大排面 <small>15元</small></span>
+                  <span class="dish price">炸酱面 <small>12元</small></span>
+                  <span class="dish price">南昌汤粉 <small>5元</small></span>
+                  <span class="dish price">南昌拌粉 <small>7元</small></span>
+                </div>
+              </div>
+              <div class="lane">
+                <h3>特色档</h3>
+                <div class="group">
+                  <div class="group-title">套餐/特色</div>
+                  <span class="dish price">轻食 <small>18元</small></span>
+                  <span class="dish price">香辣小龙虾 <small>28元</small></span>
+                  <span class="dish price">隆江猪脚饭 <small>25元</small></span>
+                  <span class="dish price">咖喱猪排饭 <small>22元</small></span>
+                  <span class="dish price">鸿运脆皮鸡米饭 <small>22元</small></span>
+                  <span class="dish price">马蹄鲜肉饼 <small>5元</small></span>
+                </div>
+              </div>
+              <div class="lane">
+                <h3>炒菜1</h3>
+                <div class="group">
+                  <div class="group-title">大荤陈列 ABC</div>
+                  <span class="dish price">黄焖大骨 <small>13元</small></span>
+                  <span class="dish price">红烧狮子头 <small>8元</small></span>
+                  <span class="dish price">毛豆香菇炖鸡 <small>10元</small></span>
+                </div>
+                <div class="group">
+                  <div class="group-title">小荤/素菜</div>
+                  <span class="dish price">葱油鸡蛋糕 <small>5元</small></span>
+                  <span class="dish price">黄瓜拌腐竹 <small>3元</small></span>
+                </div>
+              </div>
+              <div class="lane">
+                <h3>炒菜2</h3>
+                <div class="group">
+                  <div class="group-title">大荤陈列 BCD</div>
+                  <span class="dish price">红烧狮子头 <small>8元</small></span>
+                  <span class="dish price">毛豆香菇炖鸡 <small>10元</small></span>
+                  <span class="dish price">盐水基围虾 <small>12元</small></span>
+                </div>
+                <div class="group">
+                  <div class="group-title">小荤/素菜</div>
+                  <span class="dish price">鱼香肉丝 <small>6元</small></span>
+                  <span class="dish price">韭菜豆芽 <small>3元</small></span>
+                </div>
+              </div>
+              <div class="lane">
+                <h3>炒菜3</h3>
+                <div class="group">
+                  <div class="group-title">大荤陈列 CDE</div>
+                  <span class="dish price">毛豆香菇炖鸡 <small>10元</small></span>
+                  <span class="dish price">盐水基围虾 <small>12元</small></span>
+                  <span class="dish price">辣椒炒肉 <small>10元</small></span>
+                </div>
+                <div class="group">
+                  <div class="group-title">小荤/素菜</div>
+                  <span class="dish price">糖醋青椒酿肉 <small>6元</small></span>
+                  <span class="dish price">清炒空心菜 <small>3元</small></span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="side">
+            <h3>AI 审核给采购经理看的话</h3>
+            <div class="task">
+              <b>不要重复采购</b>
+              <span class="tag ok">菜池口径</span>
+              <p class="note">毛豆香菇炖鸡出现在 3 个窗口，但采购只按一个出品菜计算总量。</p>
+            </div>
+            <div class="task">
+              <b>甜品单独售卖</b>
+              <span class="tag warn">独立毛利</span>
+              <p class="note">酒酿圆子、香芋羹、红豆羹等要有售价、成本、销量。</p>
+            </div>
+            <div class="task">
+              <b>米饭/汤免费</b>
+              <span class="tag warn">计入成本</span>
+              <p class="note">不计售价，但必须进入备餐量和综合成本率。</p>
+            </div>
+            <h3 style="margin-top:18px;">AI 审核给厨师长看的话</h3>
+            <div class="task">
+              <b>按开放档口确认</b>
+              <p class="note">午餐确认 5 个档口；晚餐只确认面档和炒菜1。</p>
+            </div>
+            <div class="task">
+              <b>按菜池确认后厨</b>
+              <p class="note">先确认今天实际做哪些菜，再确认三个窗口怎么摆。</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <div class="section-head">
+        <h2>4. 晚餐：只开面档 + 一个炒菜档口</h2>
+        <span class="tag ok">关闭档口不生成任务</span>
+      </div>
+      <div class="section-body">
+        <div class="dish-grid">
+          <div class="lane">
+            <h3>晚餐面档</h3>
+            <div class="group">
+              <span class="dish">晚餐面/粉</span>
+              <span class="dish">汤面</span>
+              <span class="dish">拌面</span>
+              <span class="dish warn">免费汤自取</span>
+            </div>
+          </div>
+          <div class="lane closed">
+            <h3>特色档关闭</h3>
+            <div class="group"><span class="dish">不生成菜单</span><span class="dish">不生成采购</span></div>
+          </div>
+          <div class="lane">
+            <h3>晚餐炒菜1</h3>
+            <div class="group">
+              <div class="group-title">大荤</div>
+              <span class="dish price">剁椒龙利鱼 <small>10元</small></span>
+              <span class="dish price">沙茶土豆牛腩 <small>15元</small></span>
+              <span class="dish price">椒盐排条 <small>12元</small></span>
+            </div>
+            <div class="group">
+              <div class="group-title">小荤/素菜</div>
+              <span class="dish price">芹菜香干炒肉 <small>6元</small></span>
+              <span class="dish price">红烧茄盒 <small>6元</small></span>
+              <span class="dish price">手撕包菜 <small>3元</small></span>
+              <span class="dish price">清炒油麦菜 <small>3元</small></span>
+            </div>
+          </div>
+          <div class="lane closed">
+            <h3>炒菜2关闭</h3>
+            <div class="group"><span class="dish">不推厨师长确认</span></div>
+          </div>
+          <div class="lane closed">
+            <h3>炒菜3关闭</h3>
+            <div class="group"><span class="dish">不推备餐任务</span></div>
+          </div>
+        </div>
+        <div class="two-col" style="margin-top:16px;">
+          <div class="card">
+            <h3>晚餐可替换菜池</h3>
+            <span class="dish price">酸汤鱼片 <small>12元</small></span>
+            <span class="dish price">干豆角烧肉 <small>10元</small></span>
+            <span class="dish price">卤鸭腿 <small>10元</small></span>
+            <span class="dish price">西红柿炒蛋 <small>5元</small></span>
+            <span class="dish price">葱油冬瓜 <small>3元</small></span>
+          </div>
+          <div class="card">
+            <h3>晚餐审核重点</h3>
+            <p class="highlight">晚餐不是午餐缩小版。系统必须读取营业规则，只生成面档和一个炒菜档口。</p>
+            <p class="note">特色档、炒菜2、炒菜3关闭，所以不应该出现在采购清单、备餐清单和企业微信确认任务里。</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <div class="section-head">
+        <h2>5. 这套原型要让他们讨论什么</h2>
+        <span class="tag blue">三方确认</span>
+      </div>
+      <div class="section-body">
+        <div class="grid-3">
+          <div class="card">
+            <h3>厨师长确认</h3>
+            <p>这些菜能不能做？哪些菜需要提前预制？哪个窗口压力最大？米饭和汤的补给规则是什么？</p>
+          </div>
+          <div class="card">
+            <h3>采购经理确认</h3>
+            <p>采购按菜池算，不按窗口重复算。哪些菜缺供应商报价？哪些菜受价格波动影响最大？</p>
+          </div>
+          <div class="card">
+            <h3>运营经理确认</h3>
+            <p>早餐、午餐、晚餐档口规则是否准确？甜品是否全部单售？免费项成本如何摊入项目？</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <div class="section-head">
+        <h2>6. 成本与数据完整性：先看哪些菜能进入自动编排</h2>
+        <span class="tag warn">示例估算，等采购和成本卡确认</span>
+      </div>
+      <div class="section-body">
+        <table>
+          <thead>
+            <tr>
+              <th>菜品</th>
+              <th>档口/类型</th>
+              <th>售价</th>
+              <th>成本口径</th>
+              <th>当前状态</th>
+              <th>需要谁确认</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>红烧牛肉拉面</strong></td>
+              <td>午餐面档</td>
+              <td>26元</td>
+              <td>需要牛肉、面条、汤底、辅料克重。</td>
+              <td><span class="status warn">待成本卡核验</span></td>
+              <td>厨师长确认 SOP；采购确认牛肉报价。</td>
+            </tr>
+            <tr>
+              <td><strong>隆江猪脚饭</strong></td>
+              <td>午餐特色档</td>
+              <td>25元</td>
+              <td>需要猪脚出成率、卤汤复用规则、米饭摊销。</td>
+              <td><span class="status warn">待出成率</span></td>
+              <td>厨师长确认预制能力；采购确认猪脚规格。</td>
+            </tr>
+            <tr>
+              <td><strong>黄焖大骨</strong></td>
+              <td>炒菜大荤菜池</td>
+              <td>13元</td>
+              <td>大骨原料、损耗、焖制时间、分份克重。</td>
+              <td><span class="status ok">可试算</span></td>
+              <td>采购确认锁价；运营确认销量预估。</td>
+            </tr>
+            <tr>
+              <td><strong>毛豆香菇炖鸡</strong></td>
+              <td>炒菜大荤菜池</td>
+              <td>10元</td>
+              <td>同一菜品出现在 3 个窗口，只采购一次总量。</td>
+              <td><span class="status ok">菜池口径清楚</span></td>
+              <td>厨师长确认三窗口陈列量。</td>
+            </tr>
+            <tr>
+              <td><strong>酒酿圆子</strong></td>
+              <td>甜品单售</td>
+              <td>3元</td>
+              <td>不能并入免费汤；单独看销量、毛利、备货。</td>
+              <td><span class="status warn">待销量假设</span></td>
+              <td>运营确认是否每日供应。</td>
+            </tr>
+            <tr>
+              <td><strong>米饭 / 汤</strong></td>
+              <td>免费自取</td>
+              <td>0元</td>
+              <td>不计收入，但必须计入综合成本率。</td>
+              <td><span class="status bad">缺摊销规则</span></td>
+              <td>运营和财务确认成本分摊。</td>
+            </tr>
+          </tbody>
+        </table>
+        <p class="highlight" style="margin-top:16px;">系统第一阶段不要追求所有菜都自动算准，先把“可自动编排、需人工确认、禁止自动生成”的边界分清。</p>
+      </div>
+    </section>
+
+    <section>
+      <div class="section-head">
+        <h2>7. 下一版系统应该自动输出三张单</h2>
+        <span class="tag ok">v0.3 的工作目标</span>
+      </div>
+      <div class="section-body">
+        <div class="grid-3">
+          <div class="output-card">
+            <h3>厨师长备餐任务单</h3>
+            <div class="row"><b>早餐</b><span>面档 SKU：包点、粉面、豆浆、鸡蛋，确认出餐峰值和预制量。</span></div>
+            <div class="row"><b>午餐</b><span>5 个档口齐开，先确认菜池，再确认 ABC/BCD/CDE 窗口陈列。</span></div>
+            <div class="row"><b>晚餐</b><span>只确认面档和炒菜1，关闭档口不推任务。</span></div>
+          </div>
+          <div class="output-card">
+            <h3>采购经理采购清单</h3>
+            <div class="row"><b>菜池采购</b><span>毛豆香菇炖鸡多窗口展示，但只按一个菜品汇总采购。</span></div>
+            <div class="row"><b>缺口提示</b><span>标出缺报价、缺规格、缺最小采购单位、缺锁价的食材。</span></div>
+            <div class="row"><b>免费项</b><span>米饭、汤不产生售价，但要进入采购量和项目成本。</span></div>
+          </div>
+          <div class="output-card">
+            <h3>运营经理毛利风险表</h3>
+            <div class="row"><b>餐别</b><span>早餐、午餐、晚餐分开看，不用一个成本率混算。</span></div>
+            <div class="row"><b>档口</b><span>面档、特色档、炒菜档分别看销售额、成本率和人效压力。</span></div>
+            <div class="row"><b>风险</b><span>标出高成本、低毛利、供应不稳定、SOP 不完整的菜。</span></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <div class="section-head">
+        <h2>8. 评审会后要回收的反馈</h2>
+        <span class="tag purple">拿反馈才能进入 v0.3</span>
+      </div>
+      <div class="section-body">
+        <div class="grid-3">
+          <div class="card">
+            <h3>厨师长反馈</h3>
+            <ul class="checklist">
+              <li>哪些菜当天现做压力大，需要提前预制？</li>
+              <li>哪些菜在现有设备下不适合高峰期出餐？</li>
+              <li>三个炒菜窗口的陈列是否符合现场习惯？</li>
+            </ul>
+          </div>
+          <div class="card">
+            <h3>采购经理反馈</h3>
+            <ul class="checklist">
+              <li>哪些菜缺供应商报价或规格？</li>
+              <li>哪些食材需要锁价锁量？</li>
+              <li>菜池采购口径是否能落到采购单？</li>
+            </ul>
+          </div>
+          <div class="card">
+            <h3>运营经理反馈</h3>
+            <ul class="checklist">
+              <li>华住项目的早餐、午餐、晚餐营业规则是否准确？</li>
+              <li>免费米饭/汤和甜品单售规则是否准确？</li>
+              <li>哪些确认动作适合放进企业微信？</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <footer>
+      Star Chef - AI Menu Engine prototype v0.3. This page is a calculation demo for internal discussion, not a production system.
+    </footer>
+  </main>
+  <script src="./v03-data.js"></script>
+  <script src="./v03-app.js"></script>
+</body>
+</html>
