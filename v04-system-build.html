@@ -1,0 +1,93 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Star Chef v0.4 系统建设包</title>
+  <style>
+    :root { color-scheme: light; --ink:#102033; --muted:#5d7086; --blue:#0f6387; --line:#d8e3ec; --bg:#f4f8fb; --good:#11794f; --warn:#a75c00; }
+    body { margin:0; font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif; color:var(--ink); background:var(--bg); }
+    header { background:#104e68; color:white; padding:28px 5vw; }
+    header h1 { margin:0 0 8px; font-size:clamp(26px,4vw,44px); line-height:1.15; }
+    header p { margin:0; max-width:920px; color:#d8edf6; font-size:16px; line-height:1.7; }
+    main { max-width:1180px; margin:0 auto; padding:28px 18px 64px; }
+    section { background:white; border:1px solid var(--line); border-radius:8px; margin:0 0 18px; overflow:hidden; }
+    .head { padding:18px 20px; border-bottom:1px solid var(--line); display:flex; gap:12px; align-items:flex-start; justify-content:space-between; flex-wrap:wrap; }
+    .head h2 { margin:0; font-size:22px; }
+    .body { padding:20px; }
+    .grid { display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:12px; }
+    .card { border:1px solid var(--line); border-radius:8px; padding:16px; background:#fbfdff; }
+    .card b { display:block; font-size:28px; color:var(--blue); margin-bottom:6px; }
+    .card span { color:var(--muted); font-size:14px; line-height:1.5; }
+    .tag { display:inline-flex; align-items:center; border-radius:999px; padding:6px 10px; border:1px solid var(--line); background:#f7fbff; color:var(--blue); font-weight:700; font-size:13px; }
+    .tag.warn { color:var(--warn); background:#fff7e6; border-color:#f4d69e; }
+    .tag.good { color:var(--good); background:#effaf5; border-color:#bde6d1; }
+    table { width:100%; border-collapse:collapse; font-size:14px; }
+    th, td { padding:11px 12px; border-bottom:1px solid var(--line); text-align:left; vertical-align:top; line-height:1.5; }
+    th { background:#eef6fb; color:#12364c; font-size:13px; }
+    ul { margin:0; padding-left:20px; line-height:1.8; }
+    .actions { display:flex; flex-wrap:wrap; gap:10px; }
+    .actions a { color:white; background:var(--blue); padding:10px 14px; border-radius:8px; text-decoration:none; font-weight:700; }
+    .actions a.secondary { background:#eef6fb; color:var(--blue); border:1px solid #bdd7e8; }
+    @media (max-width:760px) { .grid { grid-template-columns:1fr; } .table-wrap { overflow-x:auto; } table { min-width:760px; } }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Star Chef - AI Menu Engine v0.4 系统建设包</h1>
+    <p>这一版把华住项目原型推进到系统建设层：数据字典、权限流程、业务规则、数据缺口和开发 Backlog。目标是让运营经理、厨师长、采购经理、财务和开发团队用同一套语言讨论。</p>
+  </header>
+  <main>
+    <section>
+      <div class="head">
+        <h2>0.4 的建设重点</h2>
+        <span class="tag good">事实 / 假设 / 决策分层</span>
+      </div>
+      <div class="body">
+        <div class="grid">
+          <div class="card"><b>24</b><span>核心数据实体，覆盖项目、合同、菜品、成本、采购、备餐、竞品和审核。</span></div>
+          <div class="card"><b>65</b><span>关键字段，明确类型、必填性、Owner、校验规则和 MVP 阶段。</span></div>
+          <div class="card"><b>12</b><span>业务规则，优先固化档口开闭、采购去重和真实毛利门槛。</span></div>
+          <div class="card"><b>12</b><span>开发 Backlog，按 P0/P1/P2 分出先后顺序。</span></div>
+        </div>
+      </div>
+    </section>
+    <section>
+      <div class="head">
+        <h2>交付文件</h2>
+        <span class="tag warn">用于评审，不是最终生产系统</span>
+      </div>
+      <div class="body actions">
+        <a href="./StarChef_v0.4_数据字典_实施Backlog.xlsx">下载数据字典 Excel</a>
+        <a class="secondary" href="./StarChef_v0.4_PRD_系统架构.md">查看 PRD / 系统架构 Markdown</a>
+        <a class="secondary" href="./">返回 v0.3 业务计算原型</a>
+      </div>
+    </section>
+    <section>
+      <div class="head"><h2>P0：下一步必须先做的事情</h2></div>
+      <div class="body">
+        <ul>
+          <li>建立标准菜名映射台，把周菜单、价格截图、成本卡归并到同一个菜品 ID。</li>
+          <li>建立食材主数据和供应商报价映射，解决报价单品名与成本卡食材名不一致。</li>
+          <li>补齐 Top 30 高频菜的每份克重、SOP、损耗率和成本卡版本。</li>
+          <li>企业微信先跑人工确认闭环：运营确认菜单、厨师确认可做、采购确认可买、财务确认毛利口径。</li>
+        </ul>
+      </div>
+    </section>
+    <section>
+      <div class="head"><h2>关键规则</h2></div>
+      <div class="body table-wrap">
+        <table>
+          <thead><tr><th>规则</th><th>系统要求</th><th>华住样本中的体现</th></tr></thead>
+          <tbody>
+            <tr><td>真实毛利门槛</td><td>售价、成本卡、克重、报价映射齐全才计算真实毛利。</td><td>当前同时命中为 0，所以只能输出目标成本上限。</td></tr>
+            <tr><td>档口开闭</td><td>关闭档口不生成采购、备餐、确认任务。</td><td>早餐只面档；午餐 5 档齐开；晚餐面档 + 炒菜1。</td></tr>
+            <tr><td>菜池采购去重</td><td>同菜多窗口展示，采购只算一次。</td><td>毛豆香菇炖鸡出现在三个炒菜窗口，但采购按一个菜品汇总。</td></tr>
+            <tr><td>免费项计成本</td><td>米饭和汤免费自取但进入综合成本率。</td><td>不产生收入，但必须进入项目成本。</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+  </main>
+</body>
+</html>

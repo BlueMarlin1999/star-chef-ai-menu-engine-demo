@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Star Chef - AI Menu Engine 华住项目 v0.3</title>
+  <title>Star Chef - AI Menu Engine 华住项目 v0.4</title>
   <style>
     :root {
       --ink: #102033;
@@ -245,6 +245,54 @@
       border: 2px solid #0f5d7e;
       box-shadow: 0 18px 46px rgba(15, 23, 42, .14);
     }
+    .v04-system {
+      border: 2px solid #155e75;
+      box-shadow: 0 18px 44px rgba(15, 23, 42, .12);
+      background: linear-gradient(180deg, #ffffff 0%, #f5fbff 100%);
+    }
+    .v04-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+    .v04-stat {
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      background: #fff;
+      padding: 14px;
+    }
+    .v04-stat b {
+      display: block;
+      font-size: 27px;
+      line-height: 1;
+      color: var(--brand);
+      margin-bottom: 6px;
+    }
+    .v04-actions {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin: 14px 0 0;
+    }
+    .v04-actions a {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 40px;
+      border-radius: 10px;
+      padding: 8px 13px;
+      color: #fff;
+      background: var(--brand);
+      text-decoration: none;
+      font-weight: 900;
+      border: 1px solid #0f5d7e;
+    }
+    .v04-actions a.secondary {
+      color: var(--brand);
+      background: #eef8ff;
+      border-color: #b8d9e8;
+    }
     .v03-kpi-grid {
       display: grid;
       grid-template-columns: repeat(6, minmax(0, 1fr));
@@ -364,7 +412,7 @@
     }
     footer { color: #475569; font-size: 14px; padding: 24px 0 36px; }
     @media (max-width: 1100px) {
-      .grid-3, .grid-4, .dish-grid, .pool, .two-col, .menu-layout, .review-grid, .v03-layout { grid-template-columns: 1fr; }
+      .grid-3, .grid-4, .dish-grid, .pool, .two-col, .menu-layout, .review-grid, .v03-layout, .v04-grid { grid-template-columns: 1fr; }
       .v03-kpi-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
       .v03-input-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
       header h1 { font-size: 24px; }
@@ -481,8 +529,8 @@
 </head>
 <body>
   <header>
-    <h1><span>Star Chef - AI Menu Engine</span><span>华住项目系统原型 v0.3</span></h1>
-    <p>从评审原型进入可计算业务输出：采购口径、备餐任务、目标成本上限和毛利风险。</p>
+    <h1><span>Star Chef - AI Menu Engine</span><span>华住项目系统建设 v0.4</span></h1>
+    <p>从业务计算原型进入系统建设：数据字典、权限流程、PRD、实施 Backlog 和华住项目验证口径。</p>
   </header>
 
   <main>
@@ -493,8 +541,30 @@
       <span class="tag ok">晚餐：面档 + 1个炒菜档</span>
       <span class="tag warn">甜品单独售卖</span>
       <span class="tag warn">米饭/汤免费自取但计成本</span>
+      <span class="tag purple">v0.4：系统建设包</span>
       <span class="tag purple">v0.3：业务计算版</span>
     </div>
+
+    <section class="v04-system">
+      <div class="section-head">
+        <h2>v0.4 系统建设包：把原型变成可开发系统</h2>
+        <span class="tag purple">严谨口径：主数据、规则、权限、缺口、验收标准</span>
+      </div>
+      <div class="section-body">
+        <div class="v04-grid">
+          <div class="v04-stat"><b>24</b><span>核心数据实体：项目、合同、菜品、成本、采购、备餐、竞品、审核。</span></div>
+          <div class="v04-stat"><b>65</b><span>关键字段：每个字段明确类型、必填性、Owner、来源和校验规则。</span></div>
+          <div class="v04-stat"><b>12</b><span>业务规则：真实毛利门槛、档口开闭、菜池去重、免费项计成本。</span></div>
+          <div class="v04-stat"><b>12</b><span>开发 Backlog：按 P0/P1/P2 排序，可直接进入系统开发排期。</span></div>
+        </div>
+        <p class="highlight">v0.4 的核心结论：先把菜名、食材、成本卡、报价、餐标和档口规则做成可信数据底座，再让 AI 做菜单推荐。AI 不能跳过数据门禁，也不能把目标成本上限说成真实毛利。</p>
+        <div class="v04-actions">
+          <a href="./v04-system-build.html">打开 0.4 系统建设包</a>
+          <a class="secondary" href="./StarChef_v0.4_数据字典_实施Backlog.xlsx">下载数据字典 Excel</a>
+          <a class="secondary" href="./StarChef_v0.4_PRD_系统架构.md">查看 PRD / 系统架构</a>
+        </div>
+      </div>
+    </section>
 
     <section class="v03-system">
       <div class="section-head">
@@ -1038,7 +1108,7 @@
     </section>
 
     <footer>
-      Star Chef - AI Menu Engine prototype v0.3. This page is a calculation demo for internal discussion, not a production system.
+      Star Chef - AI Menu Engine v0.4 system package with v0.3 calculation demo. Internal review only, not a production system.
     </footer>
   </main>
   <script src="./v03-data.js"></script>
