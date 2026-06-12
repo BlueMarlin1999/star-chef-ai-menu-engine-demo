@@ -55,8 +55,8 @@
 - [x] Use Chrome DOM dump to verify v0.5 content renders.
 - [x] Capture desktop and mobile screenshots.
 - [x] Inspect mobile screenshot with `view_image`.
-- [ ] Commit and push to `BlueMarlin1999/star-chef-ai-menu-engine-demo`.
-- [ ] Verify public GitHub Pages URL returns v0.5 content.
+- [x] Commit and push to `BlueMarlin1999/star-chef-ai-menu-engine-demo`.
+- [x] Verify public GitHub Pages URL returns v0.5 content.
 
 ### Scope Guard
 
