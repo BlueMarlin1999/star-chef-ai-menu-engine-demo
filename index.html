@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Star Chef - AI Menu Engine 华住项目 v0.5</title>
+  <title>Star Chef - AI Menu Engine 华住项目 v0.6</title>
   <style>
     :root {
       --ink: #102033;
@@ -534,8 +534,8 @@
 </head>
 <body>
   <header>
-    <h1><span>Star Chef - AI Menu Engine</span><span>华住项目正式系统骨架 v0.5</span></h1>
-    <p>从系统建设包进入上线最小闭环：角色权限、项目主档、数据导入、菜名映射、数据质量门禁和审批流。</p>
+    <h1><span>Star Chef - AI Menu Engine</span><span>华住项目数据库落地包 v0.6</span></h1>
+    <p>从前端原型进入可建库的生产蓝图：PostgreSQL schema、Excel 导入、字段映射、数据质量门禁、审批审计和数据库维护成本。</p>
   </header>
 
   <main>
@@ -546,10 +546,32 @@
       <span class="tag ok">晚餐：面档 + 1个炒菜档</span>
       <span class="tag warn">甜品单独售卖</span>
       <span class="tag warn">米饭/汤免费自取但计成本</span>
+      <span class="tag purple">v0.6：数据库落地包</span>
       <span class="tag purple">v0.5：正式系统骨架</span>
       <span class="tag purple">v0.4：系统建设包</span>
       <span class="tag purple">v0.3：业务计算版</span>
     </div>
+
+    <section class="v05-system">
+      <div class="section-head">
+        <h2>v0.6 数据库落地包：正式上线前的数据底座</h2>
+        <span class="tag purple">PostgreSQL、Excel 导入、映射、门禁、审批、审计</span>
+      </div>
+      <div class="section-body">
+        <div class="v04-grid">
+          <div class="v04-stat"><b>28</b><span>核心数据库对象：项目、角色、菜品、食材、成本卡、报价、菜单、审批、审计。</span></div>
+          <div class="v04-stat"><b>14</b><span>字段映射样本：周菜单、售价、成本卡、供应商报价先进入导入暂存层。</span></div>
+          <div class="v04-stat"><b>5</b><span>P0/P1 门禁：标准菜名、成本卡、报价映射、SOP、企业微信权限。</span></div>
+          <div class="v04-stat"><b>300-1000</b><span>华住试运行月度预算区间：腾讯云 PostgreSQL + API 服务 + 备份。</span></div>
+        </div>
+        <p class="highlight">v0.6 的核心口径：数据库是 Star Chef 的中央账本。原始 Excel 不能被覆盖，字段映射、菜名映射、审批和审计必须独立留痕；P0 未通过时，不允许展示真实毛利或生成正式采购单。</p>
+        <div class="v04-actions">
+          <a href="./v06-database-foundation.html">打开 0.6 数据库落地包</a>
+          <a class="secondary" href="./db/star-chef-v06-schema.sql">下载 PostgreSQL Schema</a>
+          <a class="secondary" href="./db/star-chef-v06-operations-runbook.md">查看数据库运维手册</a>
+        </div>
+      </div>
+    </section>
 
     <section class="v05-system">
       <div class="section-head">
@@ -1135,7 +1157,7 @@
     </section>
 
     <footer>
-      Star Chef - AI Menu Engine v0.5 production shell with v0.4 system package and v0.3 calculation demo. Internal review only, not a production system.
+      Star Chef - AI Menu Engine v0.6 database foundation with v0.5 production shell, v0.4 system package, and v0.3 calculation demo. Internal review only, not a production system.
     </footer>
   </main>
   <script src="./v03-data.js"></script>

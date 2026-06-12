@@ -1,0 +1,172 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Star Chef - AI Menu Engine v0.6 数据库落地包</title>
+  <style>
+    :root {
+      --ink:#102033;
+      --muted:#64748b;
+      --brand:#0f6387;
+      --brand-dark:#104e68;
+      --line:#d8e3ec;
+      --bg:#eef5f8;
+      --surface:#ffffff;
+      --soft:#f8fbfd;
+      --ok:#11794f;
+      --ok-bg:#effaf5;
+      --warn:#9a5b00;
+      --warn-bg:#fff8e6;
+      --bad:#b42318;
+      --bad-bg:#fff0ed;
+      color-scheme:light;
+    }
+    * { box-sizing:border-box; }
+    body { margin:0; overflow-x:hidden; font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif; color:var(--ink); background:var(--bg); }
+    header { background:var(--brand-dark); color:white; padding:22px 28px; display:flex; justify-content:space-between; gap:18px; align-items:flex-start; }
+    header > div { min-width:0; }
+    h1 { margin:0 0 8px; font-size:30px; line-height:1.18; }
+    header p { margin:0; max-width:900px; color:#d8edf6; line-height:1.65; overflow-wrap:break-word; }
+    nav { display:flex; flex-wrap:wrap; gap:8px; justify-content:flex-end; }
+    nav a, nav button { border:1px solid rgba(255,255,255,.36); background:rgba(255,255,255,.12); color:white; border-radius:9px; padding:9px 11px; text-decoration:none; font:inherit; font-weight:850; cursor:pointer; }
+    main { max-width:1480px; margin:0 auto; padding:18px; display:grid; grid-template-columns:280px minmax(0,1fr); gap:18px; }
+    aside, section { background:var(--surface); border:1px solid var(--line); border-radius:8px; overflow:hidden; }
+    aside { align-self:start; position:sticky; top:12px; }
+    .panel-head { padding:15px 16px; display:flex; justify-content:space-between; align-items:center; gap:10px; border-bottom:1px solid var(--line); background:var(--soft); }
+    .panel-head h2, .panel-head h3 { margin:0; font-size:19px; }
+    .panel-body { padding:16px; }
+    .content { display:grid; gap:18px; min-width:0; }
+    .pill { border:1px solid var(--line); background:#f8fbfd; color:#21445a; border-radius:999px; padding:6px 9px; font-size:13px; font-weight:800; }
+    #role-switcher { display:grid; gap:9px; padding:12px; }
+    #role-switcher button { width:100%; border:1px solid var(--line); background:white; border-radius:8px; padding:11px; text-align:left; cursor:pointer; }
+    #role-switcher button.active { border-color:var(--brand); background:#eaf7fd; box-shadow:inset 4px 0 0 var(--brand); }
+    #role-switcher strong, #role-switcher span { display:block; }
+    #role-switcher span { color:var(--muted); font-size:12px; margin-top:4px; line-height:1.45; }
+    .hero { display:grid; grid-template-columns:minmax(0,1.2fr) minmax(320px,.8fr); gap:18px; }
+    .hero h2 { margin:0 0 8px; font-size:26px; }
+    .hero p { margin:0; color:#475569; line-height:1.65; }
+    .meta-row { display:flex; flex-wrap:wrap; gap:8px; margin-top:12px; }
+    .score-grid { display:grid; grid-template-columns:repeat(5,minmax(0,1fr)); gap:8px; }
+    .score-card { border:1px solid var(--line); border-radius:8px; padding:10px; background:#fbfdff; min-width:0; }
+    .score-card b { font-size:23px; color:var(--brand); display:block; }
+    .score-card span { color:#334155; font-size:13px; display:block; margin-top:4px; line-height:1.35; }
+    .status { display:inline-flex; width:max-content; align-items:center; border-radius:999px; padding:4px 8px; font-size:12px; font-weight:900; border:1px solid var(--line); }
+    .status.ready, .status.pass { color:var(--ok); background:var(--ok-bg); border-color:#a7e4c4; }
+    .status.partial, .status.warning { color:var(--warn); background:var(--warn-bg); border-color:#f1d38b; }
+    .status.blocked { color:var(--bad); background:var(--bad-bg); border-color:#fec5bd; }
+    .layer-grid { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:10px; }
+    .layer-card, .flow-step, .gate-card, .decision-card, .cost-card { border:1px solid var(--line); border-radius:8px; padding:12px; background:#fbfdff; min-width:0; }
+    .layer-card h3, .flow-step h3, .gate-card h3, .decision-card h3, .cost-card h3 { margin:0 0 6px; font-size:16px; }
+    .layer-card p, .flow-step p, .gate-card p, .decision-card p, .cost-card p { margin:0; color:#475569; line-height:1.55; }
+    .layer-card small, .flow-step small, .gate-card small { display:block; color:var(--muted); margin-top:8px; line-height:1.45; }
+    .table-wrap { overflow-x:auto; border:1px solid var(--line); border-radius:8px; }
+    table { width:100%; border-collapse:collapse; min-width:980px; font-size:14px; }
+    th, td { border-bottom:1px solid var(--line); padding:10px 11px; text-align:left; vertical-align:top; line-height:1.45; }
+    th { background:#eef6fb; color:#14364d; font-size:13px; }
+    td small { color:var(--muted); display:block; margin-top:4px; }
+    .flow { display:grid; grid-template-columns:repeat(7,minmax(0,1fr)); gap:10px; }
+    .flow-step b { width:28px; height:28px; border-radius:50%; display:grid; place-items:center; background:#eaf7fd; color:var(--brand); margin-bottom:8px; }
+    .two-col { display:grid; grid-template-columns:1fr 1fr; gap:18px; }
+    #role-panel .owned { display:flex; flex-wrap:wrap; gap:8px; margin-top:10px; }
+    #role-panel .owned span { border:1px solid var(--line); border-radius:999px; padding:5px 8px; background:#f8fbfd; color:#21445a; font-size:12px; font-weight:800; }
+    .action-bar { display:flex; flex-wrap:wrap; gap:10px; }
+    .action-bar a { background:var(--brand); border:1px solid var(--brand); color:white; border-radius:8px; padding:9px 12px; text-decoration:none; font-weight:850; }
+    .action-bar a.secondary { background:white; color:var(--brand); }
+    @media (max-width: 1180px) {
+      main { grid-template-columns:1fr; }
+      aside { position:static; }
+      .hero, .two-col, .layer-grid, .flow, .score-grid { grid-template-columns:1fr; }
+    }
+    @media (max-width: 620px) {
+      header { display:block; padding:20px 16px; }
+      h1 { font-size:25px; }
+      header p { font-size:15px; line-height:1.55; }
+      nav { justify-content:flex-start; margin-top:14px; }
+      nav a, nav button { white-space:nowrap; }
+      main { padding:12px; }
+      .panel-head { display:block; }
+      .panel-head .pill { display:inline-flex; margin-top:8px; }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div>
+      <h1>Star Chef - AI Menu Engine v0.6 数据库落地包</h1>
+      <p>把华住项目从前端演示推进到可建库的生产蓝图：PostgreSQL schema、Excel 导入、字段映射、质量门禁、审批审计、购买维护和成本边界。</p>
+    </div>
+    <nav>
+      <a href="./">返回首页</a>
+      <a href="./v05-production-app.html">0.5 系统骨架</a>
+      <button id="reset-demo">重置演示状态</button>
+    </nav>
+  </header>
+
+  <main>
+    <aside>
+      <div class="panel-head"><h2>角色</h2><span class="pill">数据库 Owner</span></div>
+      <div id="role-switcher"></div>
+    </aside>
+
+    <div class="content">
+      <section>
+        <div class="panel-body hero">
+          <div id="project-panel"></div>
+          <div id="role-panel"></div>
+        </div>
+      </section>
+
+      <section>
+        <div class="panel-head"><h2>1. 数据库准备度</h2><span class="pill">先建数据底座，再接 AI</span></div>
+        <div class="panel-body"><div id="readiness-panel" class="score-grid"></div></div>
+      </section>
+
+      <section>
+        <div class="panel-head"><h2>2. 数据库分层</h2><span class="pill">从 Excel 到审计日志</span></div>
+        <div class="panel-body"><div id="layer-panel" class="layer-grid"></div></div>
+      </section>
+
+      <section>
+        <div class="panel-head"><h2>3. 核心表结构</h2><span class="pill">PostgreSQL schema v0.6</span></div>
+        <div class="panel-body"><div id="table-panel" class="table-wrap"></div></div>
+      </section>
+
+      <section>
+        <div class="panel-head"><h2>4. Excel 导入路径</h2><span class="pill">原始行不覆盖，映射后入库</span></div>
+        <div class="panel-body"><div id="flow-panel" class="flow"></div></div>
+      </section>
+
+      <div class="two-col">
+        <section>
+          <div class="panel-head"><h2>5. P0/P1 质量门禁</h2><span class="pill">不通过不算真实毛利</span></div>
+          <div class="panel-body"><div id="gate-panel" class="layer-grid"></div></div>
+        </section>
+        <section>
+          <div class="panel-head"><h2>6. 购买与维护决策</h2><span class="pill">腾讯云 PostgreSQL</span></div>
+          <div class="panel-body"><div id="decision-panel" class="layer-grid"></div></div>
+        </section>
+      </div>
+
+      <section>
+        <div class="panel-head"><h2>7. 成本区间</h2><span class="pill">先试运行，不买大实例</span></div>
+        <div class="panel-body"><div id="cost-panel" class="layer-grid"></div></div>
+      </section>
+
+      <section>
+        <div class="panel-head"><h2>8. 可下载交付物</h2><span class="pill">给技术团队和供应商</span></div>
+        <div class="panel-body">
+          <div class="action-bar">
+            <a href="./db/star-chef-v06-schema.sql">下载 PostgreSQL Schema</a>
+            <a class="secondary" href="./db/star-chef-v06-api-contract.md">查看 API 合约</a>
+            <a class="secondary" href="./db/star-chef-v06-operations-runbook.md">查看运维手册</a>
+          </div>
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <script src="./v06-database-data.js"></script>
+  <script src="./v06-database-app.js"></script>
+</body>
+</html>
