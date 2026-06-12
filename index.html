@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Star Chef - AI Menu Engine 华住项目 v0.4</title>
+  <title>Star Chef - AI Menu Engine 华住项目 v0.5</title>
   <style>
     :root {
       --ink: #102033;
@@ -249,6 +249,11 @@
       border: 2px solid #155e75;
       box-shadow: 0 18px 44px rgba(15, 23, 42, .12);
       background: linear-gradient(180deg, #ffffff 0%, #f5fbff 100%);
+    }
+    .v05-system {
+      border: 2px solid #0f5d7e;
+      box-shadow: 0 20px 52px rgba(15, 23, 42, .16);
+      background: linear-gradient(180deg, #ffffff 0%, #edf8fc 100%);
     }
     .v04-grid {
       display: grid;
@@ -529,8 +534,8 @@
 </head>
 <body>
   <header>
-    <h1><span>Star Chef - AI Menu Engine</span><span>华住项目系统建设 v0.4</span></h1>
-    <p>从业务计算原型进入系统建设：数据字典、权限流程、PRD、实施 Backlog 和华住项目验证口径。</p>
+    <h1><span>Star Chef - AI Menu Engine</span><span>华住项目正式系统骨架 v0.5</span></h1>
+    <p>从系统建设包进入上线最小闭环：角色权限、项目主档、数据导入、菜名映射、数据质量门禁和审批流。</p>
   </header>
 
   <main>
@@ -541,9 +546,31 @@
       <span class="tag ok">晚餐：面档 + 1个炒菜档</span>
       <span class="tag warn">甜品单独售卖</span>
       <span class="tag warn">米饭/汤免费自取但计成本</span>
+      <span class="tag purple">v0.5：正式系统骨架</span>
       <span class="tag purple">v0.4：系统建设包</span>
       <span class="tag purple">v0.3：业务计算版</span>
     </div>
+
+    <section class="v05-system">
+      <div class="section-head">
+        <h2>v0.5 正式系统骨架：上线前的最小生产闭环</h2>
+        <span class="tag purple">登录权限、导入、映射、门禁、审批、检查清单</span>
+      </div>
+      <div class="section-body">
+        <div class="v04-grid">
+          <div class="v04-stat"><b>4</b><span>角色权限：运营经理、厨师长、采购经理、财务/CFO。</span></div>
+          <div class="v04-stat"><b>5</b><span>导入管道：周菜单、售价参考、成本卡、供应商报价、SOP。</span></div>
+          <div class="v04-stat"><b>8</b><span>菜名映射样本：支持确认/驳回，直接影响上线准备度。</span></div>
+          <div class="v04-stat"><b>5</b><span>数据质量门禁：P0 不过，不计算真实毛利。</span></div>
+        </div>
+        <p class="highlight">v0.5 开始模拟正式系统的使用方式：不同角色看到不同责任和可操作范围，菜名映射和审批动作会改变上线准备度。它仍是前端原型，但数据结构按未来后端落库设计。</p>
+        <div class="v04-actions">
+          <a href="./v05-production-app.html">打开 0.5 正式系统骨架</a>
+          <a class="secondary" href="./v04-system-build.html">查看 0.4 系统建设包</a>
+          <a class="secondary" href="./StarChef_v0.4_数据字典_实施Backlog.xlsx">下载数据字典 Excel</a>
+        </div>
+      </div>
+    </section>
 
     <section class="v04-system">
       <div class="section-head">
@@ -1108,7 +1135,7 @@
     </section>
 
     <footer>
-      Star Chef - AI Menu Engine v0.4 system package with v0.3 calculation demo. Internal review only, not a production system.
+      Star Chef - AI Menu Engine v0.5 production shell with v0.4 system package and v0.3 calculation demo. Internal review only, not a production system.
     </footer>
   </main>
   <script src="./v03-data.js"></script>
