@@ -1,0 +1,239 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Star Chef - AI Menu Engine v0.7 数据库测试工具包</title>
+  <style>
+    :root {
+      --ink: #0e1b2f;
+      --muted: #596a81;
+      --line: #d5e1eb;
+      --page: #eef5f8;
+      --panel: #ffffff;
+      --brand: #145a73;
+      --brand-dark: #0f4c61;
+      --brand-soft: #e6f3f7;
+      --ok: #178a52;
+      --warn: #aa6a00;
+      --block: #c7372f;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      color: var(--ink);
+      background: var(--page);
+      font-family: Inter, "PingFang SC", "Microsoft YaHei", Arial, sans-serif;
+      line-height: 1.55;
+      letter-spacing: 0;
+    }
+
+    header {
+      background: var(--brand);
+      color: #fff;
+      padding: 24px 28px 26px;
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 18px;
+      align-items: start;
+    }
+
+    h1, h2, h3, p { margin: 0; }
+    h1 { font-size: 30px; line-height: 1.18; }
+    header p { margin-top: 9px; max-width: 980px; color: #dcecf2; font-weight: 700; }
+
+    .top-actions {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+    }
+
+    a.button, button {
+      color: #fff;
+      background: rgba(255,255,255,0.12);
+      border: 1px solid rgba(255,255,255,0.35);
+      border-radius: 6px;
+      padding: 9px 12px;
+      font: inherit;
+      font-weight: 800;
+      text-decoration: none;
+      cursor: pointer;
+    }
+
+    main {
+      padding: 20px;
+      display: grid;
+      grid-template-columns: 270px minmax(0, 1fr);
+      gap: 18px;
+      max-width: 1480px;
+      margin: 0 auto;
+    }
+
+    .panel {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      overflow: hidden;
+    }
+
+    .panel-head {
+      padding: 15px 16px;
+      border-bottom: 1px solid var(--line);
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      align-items: center;
+    }
+
+    .panel-body { padding: 16px; }
+
+    .role-list { display: grid; gap: 9px; }
+    .role-card {
+      width: 100%;
+      color: var(--ink);
+      background: #fff;
+      border: 1px solid var(--line);
+      text-align: left;
+    }
+    .role-card.active {
+      border-color: var(--brand);
+      background: var(--brand-soft);
+      box-shadow: inset 4px 0 0 var(--brand);
+    }
+    .role-card strong { display: block; margin-bottom: 3px; }
+    .role-card span { color: var(--muted); font-size: 13px; }
+
+    .hero-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1.2fr) minmax(280px, 0.8fr);
+      gap: 18px;
+    }
+
+    .hero-title h2 { font-size: 28px; line-height: 1.25; }
+    .hero-title p { color: var(--muted); margin-top: 8px; font-weight: 700; }
+
+    .chips { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 16px; }
+    .chip {
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      padding: 5px 9px;
+      background: #f7fbfd;
+      font-size: 13px;
+      font-weight: 800;
+      color: #21455a;
+    }
+
+    .grid-3 {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 12px;
+    }
+
+    .grid-2 {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 12px;
+    }
+
+    .mini-card {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 13px;
+      background: #fbfdff;
+      min-height: 112px;
+    }
+
+    .mini-card h3 { font-size: 16px; margin-bottom: 6px; }
+    .mini-card p, .mini-card li { color: var(--muted); font-weight: 700; }
+
+    .tag {
+      display: inline-flex;
+      align-items: center;
+      border-radius: 999px;
+      padding: 4px 8px;
+      font-size: 12px;
+      font-weight: 900;
+      border: 1px solid var(--line);
+      color: var(--brand-dark);
+      background: #f7fbfd;
+    }
+
+    .tag.ok { color: var(--ok); background: #eefaf4; border-color: #bde8d0; }
+    .tag.warn { color: var(--warn); background: #fff7e8; border-color: #f1d199; }
+    .tag.block { color: var(--block); background: #fff0ef; border-color: #f0b7b2; }
+
+    code {
+      display: block;
+      white-space: pre-wrap;
+      word-break: break-word;
+      background: #102231;
+      color: #edf8ff;
+      border-radius: 7px;
+      padding: 11px 12px;
+      font-size: 13px;
+      line-height: 1.45;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 14px;
+    }
+
+    th, td {
+      border-bottom: 1px solid var(--line);
+      text-align: left;
+      padding: 10px;
+      vertical-align: top;
+    }
+
+    th {
+      background: #eaf4f8;
+      font-weight: 900;
+    }
+
+    .main-stack { display: grid; gap: 18px; }
+    .section { display: grid; gap: 12px; }
+    ul { margin: 0; padding-left: 20px; }
+
+    @media (max-width: 980px) {
+      header { grid-template-columns: 1fr; }
+      .top-actions { justify-content: flex-start; }
+      main { grid-template-columns: 1fr; padding: 14px; }
+      .hero-grid, .grid-3, .grid-2 { grid-template-columns: 1fr; }
+      h1 { font-size: 27px; }
+      .hero-title h2 { font-size: 24px; }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div>
+      <h1>Star Chef - AI Menu Engine v0.7 数据库测试工具包</h1>
+      <p>用可复现的 PostgreSQL 测试库验证 schema、seed、smoke test、质量门禁、审批审计和华住样本数据。</p>
+    </div>
+    <nav class="top-actions" aria-label="页面导航">
+      <a class="button" href="./index.html">返回首页</a>
+      <a class="button" href="./v06-database-foundation.html">0.6 数据库基础</a>
+      <a class="button" href="./db/star-chef-v07-smoke-test.sql">Smoke SQL</a>
+    </nav>
+  </header>
+  <main>
+    <aside class="panel">
+      <div class="panel-head">
+        <h2>角色视角</h2>
+        <span class="tag">DB Test</span>
+      </div>
+      <div class="panel-body">
+        <div id="roleList" class="role-list"></div>
+      </div>
+    </aside>
+    <section id="app" class="main-stack"></section>
+  </main>
+  <script src="./v07-database-test-data.js"></script>
+  <script src="./v07-database-test-app.js"></script>
+</body>
+</html>

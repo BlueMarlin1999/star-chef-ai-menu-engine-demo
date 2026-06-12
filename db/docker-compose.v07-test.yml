@@ -1,0 +1,21 @@
+services:
+  starchef-postgres:
+    image: postgres:16
+    container_name: starchef-v07-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: starchef_test
+      POSTGRES_USER: starchef
+      POSTGRES_PASSWORD: starchef_test
+    ports:
+      - "54329:5432"
+    volumes:
+      - starchef_pgdata_v07:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U starchef -d starchef_test"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+
+volumes:
+  starchef_pgdata_v07:

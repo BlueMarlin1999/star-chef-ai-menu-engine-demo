@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Star Chef - AI Menu Engine 华住项目 v0.6</title>
+  <title>Star Chef - AI Menu Engine 华住项目 v0.7</title>
   <style>
     :root {
       --ink: #102033;
@@ -534,8 +534,8 @@
 </head>
 <body>
   <header>
-    <h1><span>Star Chef - AI Menu Engine</span><span>华住项目数据库落地包 v0.6</span></h1>
-    <p>从前端原型进入可建库的生产蓝图：PostgreSQL schema、Excel 导入、字段映射、数据质量门禁、审批审计和数据库维护成本。</p>
+    <h1><span>Star Chef - AI Menu Engine</span><span>华住项目数据库测试工具包 v0.7</span></h1>
+    <p>从数据库图纸进入可复现测试：PostgreSQL schema、华住 seed、smoke test、Docker 测试库、质量门禁和审计验证。</p>
   </header>
 
   <main>
@@ -546,11 +546,35 @@
       <span class="tag ok">晚餐：面档 + 1个炒菜档</span>
       <span class="tag warn">甜品单独售卖</span>
       <span class="tag warn">米饭/汤免费自取但计成本</span>
+      <span class="tag purple">v0.7：数据库测试工具包</span>
       <span class="tag purple">v0.6：数据库落地包</span>
       <span class="tag purple">v0.5：正式系统骨架</span>
       <span class="tag purple">v0.4：系统建设包</span>
       <span class="tag purple">v0.3：业务计算版</span>
     </div>
+
+    <section class="v05-system">
+      <div class="section-head">
+        <h2>v0.7 数据库测试工具包：正式买库前先证明能跑通</h2>
+        <span class="tag purple">Docker、PostgreSQL、seed、smoke test、业务门禁</span>
+      </div>
+      <div class="section-body">
+        <div class="v04-grid">
+          <div class="v04-stat"><b>1</b><span>一键运行器：启动 PostgreSQL、执行 schema、导入华住 seed、运行 smoke test。</span></div>
+          <div class="v04-stat"><b>6</b><span>华住菜单样本：面档、特色档、炒菜档、甜品、售价、目标成本率和份量。</span></div>
+          <div class="v04-stat"><b>9</b><span>Smoke 检查：表结构、项目、角色、档口、菜名、报价、菜单、门禁、审计。</span></div>
+          <div class="v04-stat"><b>0</b><span>无 Docker 环境也能先做静态交付校验；有 Docker 后再跑真实数据库。</span></div>
+        </div>
+        <p class="highlight">v0.7 的核心口径：买云数据库之前，先用测试库证明 schema 能落地、样本数据能写入、业务规则能被数据库拦住。测试通过不等于正式上线，但测试不通过一定不能上线。</p>
+        <div class="v04-actions">
+          <a href="./v07-database-test.html">打开 v0.7 数据库测试工具包</a>
+          <a class="secondary" href="./db/docker-compose.v07-test.yml">下载 Docker Compose</a>
+          <a class="secondary" href="./db/star-chef-v07-test-seed.sql">下载 Seed SQL</a>
+          <a class="secondary" href="./db/star-chef-v07-smoke-test.sql">下载 Smoke SQL</a>
+          <a class="secondary" href="./scripts/run-v07-db-test.mjs">下载一键运行器</a>
+        </div>
+      </div>
+    </section>
 
     <section class="v05-system">
       <div class="section-head">
