@@ -12,7 +12,7 @@ Star Chef has moved from a static menu prototype into a database-first system bu
 - v0.4: system build package for business and technical alignment.
 - v0.5: production-system shell with roles, imports, mappings, gates, and approvals.
 - v0.6: PostgreSQL schema, API contract, database operations runbook, and data governance model.
-- v0.7: Docker/PostgreSQL test toolkit with Huazhu seed data and smoke tests.
+- v0.7: Docker/PostgreSQL test toolkit with Huazhu seed data, native PostgreSQL fallback, and smoke tests.
 
 ## Key Links
 
@@ -22,6 +22,7 @@ Star Chef has moved from a static menu prototype into a database-first system bu
 - v0.6 database foundation: [v06-database-foundation.html](./v06-database-foundation.html)
 - PostgreSQL schema: [db/star-chef-v06-schema.sql](./db/star-chef-v06-schema.sql)
 - v0.7 smoke test: [db/star-chef-v07-smoke-test.sql](./db/star-chef-v07-smoke-test.sql)
+- v0.7 smoke test result: [db/star-chef-v07-smoke-test-result-2026-06-15.md](./db/star-chef-v07-smoke-test-result-2026-06-15.md)
 
 ## Local Verification
 
@@ -31,10 +32,16 @@ Static toolkit check:
 node scripts/test-v07-db-toolkit.mjs
 ```
 
-Live PostgreSQL smoke test, after Docker Desktop is installed:
+Live PostgreSQL smoke test. The runner uses Docker when the Docker daemon is available; otherwise it falls back to a local Homebrew PostgreSQL 16+ installation:
 
 ```bash
 node scripts/run-v07-db-test.mjs
+```
+
+After a native fallback run, inspect the temporary database with:
+
+```bash
+/opt/homebrew/opt/postgresql@16/bin/psql -h /private/tmp -p 54329 -U starchef -d starchef_test
 ```
 
 ## Scope Note

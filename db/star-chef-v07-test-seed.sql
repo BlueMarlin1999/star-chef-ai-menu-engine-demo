@@ -148,7 +148,7 @@ with quote_batch as (
 insert into supplier_quotes (batch_id, ingredient_id, source_item_name, specification, purchase_unit, min_order_qty, unit_price, tax_rate, account_period_days, supply_risk_score, mapping_status, data_issue)
 select qb.id, i.id, v.source_item_name, v.specification, v.purchase_unit, v.min_order_qty, v.unit_price, 0.0600, 30, v.supply_risk_score, 'approved', null
 from quote_batch qb
-join (values
+cross join (values
   ('牛肉', '牛肉切块', '冻品/切块', 'kg', 5::numeric, 42.0000::numeric, 2.50::numeric),
   ('拉面', '拉面', '2.5kg/袋', 'kg', 2::numeric, 6.8000::numeric, 1.00::numeric),
   ('鸡肉', '鸡肉块', '冻品/块', 'kg', 5::numeric, 18.0000::numeric, 1.80::numeric),
@@ -170,7 +170,7 @@ with menu as (
 insert into menu_plan_items (menu_plan_id, dish_id, stall_code, dish_category, sale_price, target_cost_rate, estimated_cost, serving_weight_g, innovation_flag, repeat_flag, feasibility_status)
 select m.id, d.id, v.stall_code, v.dish_category, v.sale_price, 0.3600, v.estimated_cost, v.serving_weight_g, v.innovation_flag, v.repeat_flag, v.feasibility_status
 from menu m
-join (values
+cross join (values
   ('红烧牛肉拉面', 'noodle', '面档', 26::numeric, 8.60::numeric, 620::numeric, false, false, 'approved'),
   ('香辣小龙虾', 'special', '特色', 28::numeric, 10.20::numeric, 220::numeric, true, false, 'pending'),
   ('毛豆香菇炖鸡', 'stir_fry_1', '大荤', 10::numeric, 4.50::numeric, 180::numeric, false, false, 'pending'),
@@ -242,12 +242,12 @@ join app_users u on u.wecom_user_id = 'chef.huazhu'
 where p.code = 'HZ-JQ-2026';
 
 insert into audit_logs (project_id, actor_user_id, actor_role_id, action, object_type, object_id, before_payload, after_payload)
-select p.id, u.id, 'admin', 'v0.7.seed.loaded', 'database_seed', 'star-chef-v07-test-seed.sql', null, '{"status":"loaded","scope":"huazhu pilot"}'::jsonb
+select p.id, u.id, 'admin', 'v0.7.seed.loaded', 'database_seed', 'star-chef-v07-test-seed.sql', null::jsonb, '{"status":"loaded","scope":"huazhu pilot"}'::jsonb
 from projects p
 join app_users u on u.wecom_user_id = 'admin.starchef'
 where p.code = 'HZ-JQ-2026'
 union all
-select p.id, u.id, 'procurement', 'v0.7.quote.mapped', 'supplier_quote_batch', 'v0.7_landing_supplier_quote_seed.xlsx', null, '{"mapped_quotes":7,"supplier":"蓝鼎供应商"}'::jsonb
+select p.id, u.id, 'procurement', 'v0.7.quote.mapped', 'supplier_quote_batch', 'v0.7_landing_supplier_quote_seed.xlsx', null::jsonb, '{"mapped_quotes":7,"supplier":"蓝鼎供应商"}'::jsonb
 from projects p
 join app_users u on u.wecom_user_id = 'buyer.huazhu'
 where p.code = 'HZ-JQ-2026'
