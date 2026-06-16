@@ -1,0 +1,438 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Star Chef - AI Menu Engine v0.8 Menu Operations Loop</title>
+  <style>
+    :root {
+      --ink: #0f1f2e;
+      --muted: #526579;
+      --line: #d4dee8;
+      --page: #edf4f6;
+      --panel: #ffffff;
+      --brand: #145a73;
+      --brand-dark: #0f4054;
+      --accent: #b45f06;
+      --ok: #157347;
+      --warn: #a45d00;
+      --block: #b42318;
+      --soft-ok: #edf8f2;
+      --soft-warn: #fff6e5;
+      --soft-block: #fff1ef;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      color: var(--ink);
+      background: var(--page);
+      font-family: Inter, "PingFang SC", "Microsoft YaHei", Arial, sans-serif;
+      line-height: 1.55;
+      letter-spacing: 0;
+      overflow-x: hidden;
+    }
+
+    html { overflow-x: hidden; }
+
+    header {
+      background: var(--brand);
+      color: #fff;
+      padding: 22px 28px;
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      gap: 18px;
+      align-items: center;
+      border-bottom: 1px solid rgba(255,255,255,0.18);
+    }
+
+    header strong {
+      display: block;
+      font-size: 20px;
+      line-height: 1.2;
+    }
+
+    header span {
+      display: block;
+      margin-top: 3px;
+      color: #d9edf3;
+      font-weight: 700;
+      font-size: 14px;
+    }
+
+    nav {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 9px;
+      justify-content: flex-end;
+    }
+
+    nav a {
+      color: #fff;
+      text-decoration: none;
+      border: 1px solid rgba(255,255,255,0.34);
+      border-radius: 6px;
+      padding: 8px 10px;
+      font-weight: 800;
+      font-size: 14px;
+      background: rgba(255,255,255,0.1);
+      overflow-wrap: anywhere;
+    }
+
+    main {
+      max-width: 1480px;
+      margin: 0 auto;
+      padding: 20px;
+      display: grid;
+      gap: 16px;
+    }
+
+    .hero-panel {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 22px;
+      display: grid;
+      grid-template-columns: minmax(0, 1.15fr) minmax(320px, .85fr);
+      gap: 20px;
+      align-items: stretch;
+    }
+
+    .hero-copy,
+    .metric-grid,
+    .metric-card,
+    .panel,
+    .loop-card,
+    .role-card,
+    .milestone-card,
+    .loop-column,
+    .detail-row,
+    td,
+    th {
+      min-width: 0;
+    }
+
+    .eyebrow {
+      margin: 0 0 8px;
+      color: var(--accent);
+      font-weight: 900;
+    }
+
+    h1, h2, h3, h4, p { margin: 0; }
+    h1, h2, h3, h4, p, strong, li, td, th { overflow-wrap: anywhere; }
+    h1 { font-size: 34px; line-height: 1.18; }
+    h2 { font-size: 23px; }
+    h3 { font-size: 18px; }
+    h4 { font-size: 14px; color: var(--brand-dark); }
+
+    .hero-subtitle {
+      margin-top: 10px;
+      color: var(--muted);
+      font-size: 18px;
+      font-weight: 750;
+    }
+
+    .decision {
+      margin-top: 16px;
+      padding: 13px 14px;
+      border-left: 5px solid var(--accent);
+      background: #fffaf3;
+      border-radius: 6px;
+      font-weight: 850;
+    }
+
+    .metric-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px;
+    }
+
+    .metric-card {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 14px;
+      background: #f8fbfd;
+      min-height: 104px;
+    }
+
+    .metric-card span {
+      display: block;
+      color: var(--muted);
+      font-size: 13px;
+      font-weight: 900;
+      margin-bottom: 8px;
+    }
+
+    .metric-card strong {
+      display: block;
+      font-size: 20px;
+      line-height: 1.25;
+    }
+
+    .panel {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      overflow: hidden;
+    }
+
+    .panel-head {
+      padding: 15px 18px;
+      background: #f8fbfd;
+      border-bottom: 1px solid var(--line);
+      display: flex;
+      justify-content: space-between;
+      gap: 16px;
+      align-items: baseline;
+    }
+
+    .panel-head p {
+      color: var(--muted);
+      font-weight: 750;
+      text-align: right;
+    }
+
+    .panel-body { padding: 18px; }
+
+    .principle-grid {
+      display: grid;
+      grid-template-columns: repeat(6, minmax(0, 1fr));
+      gap: 10px;
+    }
+
+    .principle-card,
+    .role-card,
+    .milestone-card {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #fff;
+      padding: 14px;
+    }
+
+    .principle-key {
+      display: inline-block;
+      color: var(--brand);
+      font-size: 12px;
+      font-weight: 900;
+      text-transform: uppercase;
+      margin-bottom: 8px;
+    }
+
+    .principle-card p,
+    .role-card p,
+    .milestone-card p,
+    .detail-row p,
+    .plain-list li {
+      color: var(--muted);
+      font-weight: 700;
+    }
+
+    .loop-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 14px;
+    }
+
+    .loop-card {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #fff;
+      padding: 16px;
+      display: grid;
+      gap: 12px;
+    }
+
+    .loop-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+    }
+
+    .loop-number {
+      color: var(--brand);
+      font-size: 13px;
+      font-weight: 950;
+    }
+
+    .tag {
+      border-radius: 999px;
+      padding: 4px 8px;
+      font-size: 12px;
+      font-weight: 950;
+      border: 1px solid var(--line);
+    }
+
+    .tag.ok { color: var(--ok); background: var(--soft-ok); border-color: #b7e2c8; }
+    .tag.warn { color: var(--warn); background: var(--soft-warn); border-color: #e8c98b; }
+    .tag.block { color: var(--block); background: var(--soft-block); border-color: #efb2ab; }
+
+    .owner {
+      color: var(--brand-dark);
+      font-weight: 900;
+    }
+
+    .loop-details {
+      display: grid;
+      gap: 8px;
+      padding: 12px;
+      background: #f8fbfd;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+    }
+
+    .detail-row {
+      display: grid;
+      grid-template-columns: 72px minmax(0, 1fr);
+      gap: 8px;
+    }
+
+    .detail-row b {
+      color: var(--ink);
+    }
+
+    .loop-columns {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px;
+    }
+
+    .loop-column {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 12px;
+      background: #fcfefe;
+    }
+
+    .plain-list {
+      margin: 8px 0 0;
+      padding-left: 18px;
+    }
+
+    .plain-list li {
+      margin: 5px 0;
+    }
+
+    .role-board {
+      display: grid;
+      grid-template-columns: repeat(5, minmax(0, 1fr));
+      gap: 12px;
+    }
+
+    .role-card {
+      display: grid;
+      gap: 10px;
+    }
+
+    .gate-stack {
+      display: grid;
+      gap: 16px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 15px;
+    }
+
+    th, td {
+      border-bottom: 1px solid var(--line);
+      padding: 11px;
+      text-align: left;
+      vertical-align: top;
+    }
+
+    th {
+      background: #eaf3f7;
+      color: var(--brand-dark);
+      font-weight: 950;
+    }
+
+    .milestone-row {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 12px;
+    }
+
+    .milestone-id {
+      display: inline-block;
+      color: var(--accent);
+      font-size: 12px;
+      font-weight: 950;
+      margin-bottom: 8px;
+    }
+
+    @media (max-width: 1100px) {
+      .hero-panel,
+      .loop-grid,
+      .role-board,
+      .milestone-row {
+        grid-template-columns: 1fr;
+      }
+
+      .principle-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
+
+    @media (max-width: 720px) {
+      header {
+        grid-template-columns: 1fr;
+        padding: 18px;
+      }
+
+      nav {
+        justify-content: flex-start;
+      }
+
+      main {
+        padding: 12px;
+      }
+
+      .hero-panel {
+        padding: 16px;
+      }
+
+      h1 { font-size: 28px; }
+      .metric-grid,
+      .principle-grid,
+      .loop-columns {
+        grid-template-columns: 1fr;
+      }
+
+      .panel-head {
+        display: grid;
+      }
+
+      .panel-head p {
+        text-align: left;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div>
+      <strong>Star Chef - AI Menu Engine v0.8</strong>
+      <span>Menu Operations Loop / 华住项目 · 上海江桥</span>
+    </div>
+    <nav aria-label="页面导航">
+      <a href="./index.html">首页</a>
+      <a href="./v07-database-test.html">v0.7 数据库测试</a>
+      <a href="./v06-database-foundation.html">v0.6 数据库基础</a>
+    </nav>
+  </header>
+
+  <main>
+    <div id="hero"></div>
+    <div id="principles"></div>
+    <div id="loops"></div>
+    <div id="roles"></div>
+    <div id="gates"></div>
+  </main>
+
+  <script src="./v08-loop-engine-data.js"></script>
+  <script src="./v08-loop-engine-app.js"></script>
+</body>
+</html>

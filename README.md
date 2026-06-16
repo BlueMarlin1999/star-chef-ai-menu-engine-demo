@@ -2,7 +2,7 @@
 
 Internal review and build package for the Huazhu / Shanghai Jiangqiao pilot.
 
-Current version: **v0.7 database test toolkit**.
+Current version: **v0.8 Menu Operations Loop**.
 
 ## Current Status
 
@@ -13,11 +13,15 @@ Star Chef has moved from a static menu prototype into a database-first system bu
 - v0.5: production-system shell with roles, imports, mappings, gates, and approvals.
 - v0.6: PostgreSQL schema, API contract, database operations runbook, and data governance model.
 - v0.7: Docker/PostgreSQL test toolkit with Huazhu seed data, native PostgreSQL fallback, and smoke tests.
+- v0.8: Menu Operations Loop, reframing Star Chef from prompt-based AI output into auditable operating loops.
 
 ## Key Links
 
 - Public home: https://bluemarlin1999.github.io/star-chef-ai-menu-engine-demo/
 - Progress and todo: [STAR_CHEF_PROGRESS_AND_TODO.md](./STAR_CHEF_PROGRESS_AND_TODO.md)
+- v0.8 menu operations loop: [v08-menu-operations-loop.html](./v08-menu-operations-loop.html)
+- v0.8 design spec: [docs/superpowers/specs/2026-06-16-star-chef-v08-menu-operations-loop-design.md](./docs/superpowers/specs/2026-06-16-star-chef-v08-menu-operations-loop-design.md)
+- v0.8 implementation plan: [docs/superpowers/plans/2026-06-16-star-chef-v08-menu-operations-loop.md](./docs/superpowers/plans/2026-06-16-star-chef-v08-menu-operations-loop.md)
 - v0.7 database test page: [v07-database-test.html](./v07-database-test.html)
 - v0.6 database foundation: [v06-database-foundation.html](./v06-database-foundation.html)
 - PostgreSQL schema: [db/star-chef-v06-schema.sql](./db/star-chef-v06-schema.sql)

@@ -36,8 +36,28 @@ const checks = [
     markers: ["render", "role", "smoke"],
   },
   {
+    file: "v08-loop-engine-data.js",
+    markers: ["__STAR_CHEF_V08_LOOP_DATA__", "Menu Operations Loop", "supplier_quote_import", "quality_gate_approval"],
+  },
+  {
+    file: "v08-menu-operations-loop.html",
+    markers: ["Star Chef - AI Menu Engine v0.8", "v08-loop-engine-data.js", "v08-loop-engine-app.js"],
+  },
+  {
+    file: "v08-loop-engine-app.js",
+    markers: ["renderStarChefV08", "renderLoops", "acceptanceGates"],
+  },
+  {
+    file: "docs/superpowers/specs/2026-06-16-star-chef-v08-menu-operations-loop-design.md",
+    markers: ["Menu Operations Loop", "Supplier Quote Import Loop", "Quality Gate and Approval Loop"],
+  },
+  {
+    file: "docs/superpowers/plans/2026-06-16-star-chef-v08-menu-operations-loop.md",
+    markers: ["Implementation Plan", "v08-menu-operations-loop.html", "node scripts/run-v07-db-test.mjs"],
+  },
+  {
     file: "index.html",
-    markers: ["v0.7 数据库测试工具包", "v07-database-test.html", "star-chef-v07-smoke-test.sql"],
+    markers: ["v0.8 菜单运营循环", "v08-menu-operations-loop.html", "v0.7 数据库测试工具包"],
   },
 ];
 
