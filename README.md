@@ -18,6 +18,7 @@ Star Chef has moved from a static menu prototype into a database-first system bu
 ## Key Links
 
 - Public home: https://bluemarlin1999.github.io/star-chef-ai-menu-engine-demo/
+- Supplier collaboration preview: [star-chef-supplier-preview/](./star-chef-supplier-preview/)
 - Progress and todo: [STAR_CHEF_PROGRESS_AND_TODO.md](./STAR_CHEF_PROGRESS_AND_TODO.md)
 - v0.8 menu operations loop: [v08-menu-operations-loop.html](./v08-menu-operations-loop.html)
 - v0.8 design spec: [docs/superpowers/specs/2026-06-16-star-chef-v08-menu-operations-loop-design.md](./docs/superpowers/specs/2026-06-16-star-chef-v08-menu-operations-loop-design.md)
