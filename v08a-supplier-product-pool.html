@@ -1,0 +1,888 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Star Chef - AI Menu Engine v0.8a Supplier Product Pool</title>
+  <style>
+    :root {
+      --ink: #102033;
+      --muted: #506376;
+      --line: #cbd8e3;
+      --page: #edf4f6;
+      --panel: #ffffff;
+      --subtle: #f7fbfc;
+      --brand: #145a73;
+      --brand-dark: #0f4054;
+      --accent: #b45f06;
+      --ok: #166534;
+      --ok-bg: #e8f7ed;
+      --warn: #8a4b00;
+      --warn-bg: #fff4dd;
+      --trial: #075985;
+      --trial-bg: #e4f4ff;
+      --blocked: #a11f16;
+      --blocked-bg: #fff0ee;
+      --shadow: 0 16px 38px rgba(15, 31, 46, .08);
+    }
+
+    * { box-sizing: border-box; }
+    html { overflow-x: hidden; }
+    body {
+      margin: 0;
+      color: var(--ink);
+      background: var(--page);
+      font-family: Inter, "PingFang SC", "Microsoft YaHei", Arial, sans-serif;
+      line-height: 1.5;
+      letter-spacing: 0;
+      overflow-x: hidden;
+    }
+
+    a { color: inherit; }
+    h1, h2, h3, h4, p { margin: 0; }
+    h1, h2, h3, h4, p, th, td, button, li, strong, span { overflow-wrap: anywhere; }
+    button { font: inherit; }
+
+    .app-header {
+      background: var(--brand);
+      color: #fff;
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      gap: 18px;
+      align-items: center;
+      padding: 20px 28px;
+      border-bottom: 1px solid rgba(255,255,255,.16);
+    }
+
+    .app-header > * {
+      min-width: 0;
+    }
+
+    .app-header strong {
+      display: block;
+      font-size: 20px;
+      line-height: 1.2;
+    }
+
+    .app-header span {
+      display: block;
+      color: #d9edf3;
+      font-size: 14px;
+      font-weight: 760;
+      margin-top: 4px;
+    }
+
+    .top-nav {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      justify-content: flex-end;
+    }
+
+    .top-nav a {
+      color: #fff;
+      text-decoration: none;
+      border: 1px solid rgba(255,255,255,.36);
+      border-radius: 6px;
+      padding: 8px 10px;
+      font-size: 14px;
+      font-weight: 850;
+      background: rgba(255,255,255,.1);
+      overflow-wrap: anywhere;
+      white-space: normal;
+    }
+
+    main {
+      max-width: 1520px;
+      margin: 0 auto;
+      padding: 20px;
+      display: grid;
+      gap: 16px;
+    }
+
+    .hero {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      box-shadow: var(--shadow);
+      padding: 22px;
+      display: grid;
+      grid-template-columns: minmax(0, 1.1fr) minmax(280px, .72fr);
+      gap: 18px;
+      align-items: stretch;
+      min-width: 0;
+    }
+
+    .hero-copy {
+      display: grid;
+      align-content: start;
+      gap: 10px;
+      min-width: 0;
+    }
+
+    .project-code {
+      color: var(--accent);
+      font-weight: 950;
+      font-size: 14px;
+    }
+
+    h1 {
+      font-size: 34px;
+      line-height: 1.16;
+      max-width: 980px;
+    }
+
+    .hero-subtitle {
+      color: var(--muted);
+      font-size: 18px;
+      font-weight: 760;
+      max-width: 980px;
+    }
+
+    .decision {
+      margin-top: 4px;
+      padding: 13px 14px;
+      border-left: 5px solid var(--accent);
+      border-radius: 6px;
+      background: #fff9ef;
+      font-weight: 870;
+    }
+
+    .operation-card {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--subtle);
+      padding: 16px;
+      display: grid;
+      gap: 10px;
+      min-width: 0;
+    }
+
+    .operation-card h2 { font-size: 20px; }
+    .operation-card h3 { font-size: 15px; color: var(--brand-dark); }
+    .operation-card p { color: var(--muted); font-weight: 760; }
+
+    .metric-strip {
+      grid-column: 1 / -1;
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 10px;
+    }
+
+    .metric {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #fbfdfe;
+      padding: 14px;
+      min-width: 0;
+    }
+
+    .metric span {
+      display: block;
+      color: var(--muted);
+      font-size: 13px;
+      font-weight: 900;
+      margin-bottom: 7px;
+    }
+
+    .metric strong {
+      display: block;
+      font-size: 26px;
+      line-height: 1.05;
+      color: var(--brand);
+      margin-bottom: 7px;
+    }
+
+    .metric p {
+      color: var(--muted);
+      font-size: 14px;
+      font-weight: 720;
+    }
+
+    .panel {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      overflow: hidden;
+      box-shadow: var(--shadow);
+      min-width: 0;
+    }
+
+    .panel-head {
+      padding: 15px 18px;
+      display: flex;
+      justify-content: space-between;
+      gap: 16px;
+      align-items: baseline;
+      background: #f8fbfd;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .panel-head h2 {
+      font-size: 22px;
+      line-height: 1.25;
+    }
+
+    .panel-head p {
+      color: var(--muted);
+      font-weight: 760;
+      text-align: right;
+      max-width: 720px;
+    }
+
+    .panel-body { padding: 18px; }
+
+    .workflow-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 12px;
+    }
+
+    .workflow-step,
+    .library-panel,
+    .gate-item,
+    .detail-panel,
+    .manual-panel,
+    .output-list {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #fff;
+      min-width: 0;
+    }
+
+    .workflow-step {
+      padding: 15px;
+      display: grid;
+      gap: 9px;
+    }
+
+    .step-number {
+      color: var(--brand);
+      font-weight: 950;
+      font-size: 13px;
+    }
+
+    .workflow-step h3,
+    .library-panel h3,
+    .gate-item h3,
+    .detail-panel h3,
+    .manual-panel h3 {
+      font-size: 18px;
+      line-height: 1.25;
+    }
+
+    .workflow-step p,
+    .library-panel p,
+    .gate-item p,
+    .detail-panel p,
+    .manual-panel p,
+    .tight-list li {
+      color: var(--muted);
+      font-weight: 720;
+    }
+
+    .workflow-step b {
+      color: var(--brand-dark);
+      font-size: 14px;
+    }
+
+    .owner-line {
+      color: var(--brand-dark) !important;
+      font-weight: 900 !important;
+    }
+
+    .gate-line {
+      background: #fff9ef;
+      border-left: 4px solid var(--accent);
+      border-radius: 6px;
+      padding: 9px 10px;
+    }
+
+    .supplier-board {
+      display: grid;
+      grid-template-columns: minmax(0, 1.35fr) minmax(340px, .65fr);
+      gap: 14px;
+      align-items: start;
+    }
+
+    .supplier-left {
+      min-width: 0;
+      display: grid;
+      gap: 12px;
+    }
+
+    .filter-bar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      align-items: center;
+    }
+
+    .filter,
+    .action-button,
+    .text-button,
+    .menu-item {
+      cursor: pointer;
+    }
+
+    .filter {
+      min-height: 36px;
+      border: 1px solid var(--line);
+      border-radius: 6px;
+      background: #fff;
+      color: var(--ink);
+      padding: 7px 11px;
+      font-size: 14px;
+      font-weight: 850;
+    }
+
+    .filter.active {
+      background: var(--brand);
+      border-color: var(--brand);
+      color: #fff;
+    }
+
+    .table-wrap {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      overflow-x: auto;
+      background: #fff;
+    }
+
+    table {
+      width: 100%;
+      min-width: 980px;
+      border-collapse: collapse;
+      font-size: 14px;
+    }
+
+    th, td {
+      padding: 11px;
+      text-align: left;
+      border-bottom: 1px solid var(--line);
+      vertical-align: top;
+    }
+
+    th {
+      color: var(--brand-dark);
+      background: #eaf3f7;
+      font-size: 13px;
+      font-weight: 950;
+    }
+
+    tbody tr:last-child td { border-bottom: 0; }
+    tbody tr.selected { background: #fff8eb; }
+
+    .name-cell {
+      display: grid;
+      gap: 4px;
+      min-width: 180px;
+    }
+
+    .name-cell small {
+      color: var(--muted);
+      font-weight: 720;
+      font-size: 12px;
+    }
+
+    .text-button {
+      border: 0;
+      background: transparent;
+      padding: 0;
+      color: var(--brand-dark);
+      font-weight: 950;
+      text-align: left;
+    }
+
+    .supplier-card-list {
+      display: none;
+      gap: 10px;
+    }
+
+    .supplier-card {
+      width: 100%;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #fff;
+      color: var(--ink);
+      padding: 12px;
+      text-align: left;
+      display: grid;
+      gap: 7px;
+    }
+
+    .supplier-card.selected {
+      border-color: var(--accent);
+      background: #fff8eb;
+    }
+
+    .supplier-card strong {
+      color: var(--brand-dark);
+      font-size: 16px;
+      line-height: 1.25;
+    }
+
+    .supplier-card span,
+    .supplier-card p {
+      color: var(--muted);
+      font-size: 13px;
+      font-weight: 760;
+    }
+
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: fit-content;
+      max-width: 100%;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      padding: 4px 8px;
+      font-size: 12px;
+      line-height: 1.2;
+      font-weight: 950;
+      white-space: nowrap;
+    }
+
+    .pill.ok { color: var(--ok); background: var(--ok-bg); border-color: #add8bb; }
+    .pill.warn { color: var(--warn); background: var(--warn-bg); border-color: #e8c17a; }
+    .pill.trial { color: var(--trial); background: var(--trial-bg); border-color: #9bd6f2; }
+    .pill.blocked { color: var(--blocked); background: var(--blocked-bg); border-color: #efb1ab; }
+    .pill.plain { color: var(--muted); background: #f1f5f9; border-color: #d6e0e8; }
+
+    .detail-panel,
+    .manual-panel {
+      padding: 15px;
+      display: grid;
+      gap: 13px;
+      position: sticky;
+      top: 12px;
+    }
+
+    .detail-title {
+      display: flex;
+      align-items: start;
+      justify-content: space-between;
+      gap: 10px;
+    }
+
+    .detail-grid {
+      display: grid;
+      gap: 8px;
+    }
+
+    .detail-row {
+      display: grid;
+      grid-template-columns: 82px minmax(0, 1fr);
+      gap: 8px;
+      padding-bottom: 8px;
+      border-bottom: 1px solid #e7eef4;
+    }
+
+    .detail-row b {
+      color: var(--brand-dark);
+      font-size: 13px;
+    }
+
+    .detail-row p {
+      font-size: 14px;
+    }
+
+    .mapping-block {
+      display: grid;
+      gap: 8px;
+      border-top: 1px solid #e7eef4;
+      padding-top: 11px;
+    }
+
+    .mapping-block h4,
+    .manual-panel h4,
+    .output-list h3 {
+      color: var(--brand-dark);
+      font-size: 15px;
+    }
+
+    .tight-list {
+      margin: 0;
+      padding-left: 18px;
+    }
+
+    .tight-list li {
+      margin: 5px 0;
+      font-size: 14px;
+    }
+
+    .empty-note {
+      color: var(--ok) !important;
+      font-weight: 850 !important;
+      font-size: 14px;
+    }
+
+    .gate-summary {
+      border-left: 4px solid var(--brand);
+      padding: 10px 11px;
+      border-radius: 6px;
+      background: #eef7fa;
+      color: var(--brand-dark) !important;
+      font-weight: 900 !important;
+    }
+
+    .library-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 12px;
+    }
+
+    .library-panel {
+      padding: 15px;
+      display: grid;
+      gap: 11px;
+    }
+
+    .library-counts {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+    }
+
+    .menu-board {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(320px, .28fr);
+      gap: 14px;
+      align-items: start;
+    }
+
+    .menu-canvas {
+      display: grid;
+      gap: 14px;
+      min-width: 0;
+    }
+
+    .meal-group {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #fbfdfe;
+      overflow: hidden;
+      min-width: 0;
+    }
+
+    .meal-head {
+      padding: 13px 14px;
+      display: flex;
+      gap: 14px;
+      justify-content: space-between;
+      align-items: baseline;
+      border-bottom: 1px solid var(--line);
+      background: #f4f9fb;
+    }
+
+    .meal-head h3 {
+      color: var(--brand-dark);
+      font-size: 19px;
+    }
+
+    .meal-head p {
+      color: var(--muted);
+      font-weight: 760;
+      text-align: right;
+    }
+
+    .menu-lanes {
+      padding: 12px;
+      display: grid;
+      grid-template-columns: repeat(5, minmax(0, 1fr));
+      gap: 10px;
+    }
+
+    .menu-lane {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #fff;
+      overflow: hidden;
+      min-width: 0;
+    }
+
+    .menu-lane.closed {
+      background: #f3f6f8;
+      opacity: .7;
+    }
+
+    .lane-head {
+      display: flex;
+      justify-content: space-between;
+      gap: 8px;
+      align-items: center;
+      padding: 10px 11px;
+      background: var(--brand);
+      color: #fff;
+    }
+
+    .menu-lane.closed .lane-head { background: #728293; }
+    .lane-head h3 { font-size: 15px; }
+
+    .menu-item {
+      width: calc(100% - 16px);
+      margin: 8px;
+      border: 1px solid #d5e1ea;
+      border-radius: 7px;
+      background: #f9fcfd;
+      color: var(--ink);
+      padding: 9px 10px;
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 4px 8px;
+      text-align: left;
+      min-height: 58px;
+    }
+
+    .menu-item strong {
+      font-size: 14px;
+      line-height: 1.25;
+    }
+
+    .menu-item span {
+      color: var(--brand);
+      font-size: 12px;
+      font-weight: 900;
+      text-align: right;
+    }
+
+    .menu-item em {
+      grid-column: 1 / -1;
+      color: var(--muted);
+      font-style: normal;
+      font-size: 12px;
+      font-weight: 800;
+    }
+
+    .menu-item:hover,
+    .filter:hover,
+    .action-button:hover {
+      border-color: var(--brand);
+    }
+
+    .manual-panel {
+      background: #fff;
+    }
+
+    .manual-context,
+    .manual-line {
+      color: var(--muted);
+      font-weight: 760;
+      font-size: 14px;
+    }
+
+    .action-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 8px;
+    }
+
+    .action-button {
+      border: 1px solid var(--brand);
+      border-radius: 6px;
+      background: #eef7fa;
+      color: var(--brand-dark);
+      min-height: 38px;
+      padding: 8px 10px;
+      font-size: 14px;
+      font-weight: 900;
+    }
+
+    .activity-log {
+      border-top: 1px solid #e7eef4;
+      padding-top: 11px;
+      display: grid;
+      gap: 7px;
+    }
+
+    .activity-log p {
+      border-left: 3px solid var(--accent);
+      padding-left: 9px;
+      font-size: 13px;
+      color: var(--muted);
+      font-weight: 760;
+    }
+
+    .quality-layout {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(280px, .35fr);
+      gap: 14px;
+    }
+
+    .gate-list {
+      display: grid;
+      grid-template-columns: repeat(5, minmax(0, 1fr));
+      gap: 10px;
+    }
+
+    .gate-item,
+    .output-list {
+      padding: 14px;
+      display: grid;
+      gap: 9px;
+    }
+
+    .gate-item small {
+      color: var(--brand-dark);
+      font-weight: 900;
+    }
+
+    .page-footer {
+      max-width: 1520px;
+      margin: 0 auto;
+      padding: 0 20px 30px;
+      color: var(--muted);
+      font-weight: 720;
+      font-size: 13px;
+    }
+
+    @media (max-width: 1180px) {
+      .workflow-grid,
+      .library-grid,
+      .gate-list,
+      .menu-lanes,
+      .metric-strip {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .supplier-board,
+      .menu-board,
+      .quality-layout,
+      .hero {
+        grid-template-columns: 1fr;
+      }
+
+      .detail-panel,
+      .manual-panel {
+        position: static;
+      }
+    }
+
+    @media (max-width: 720px) {
+      .app-header {
+        grid-template-columns: 1fr;
+        padding: 18px 16px;
+      }
+
+      .top-nav {
+        justify-content: flex-start;
+      }
+
+      .top-nav a {
+        flex: 1 1 calc(50% - 8px);
+        min-width: 0;
+        text-align: center;
+        padding: 8px 7px;
+      }
+
+      .hero,
+      .panel,
+      .workflow-step,
+      .library-panel,
+      .detail-panel,
+      .manual-panel,
+      .gate-item,
+      .output-list,
+      .meal-group,
+      .menu-lane,
+      .metric,
+      .operation-card {
+        max-width: 100%;
+        min-width: 0;
+      }
+
+      main {
+        padding: 12px;
+      }
+
+      .hero,
+      .panel-body {
+        padding: 14px;
+      }
+
+      h1 {
+        font-size: 27px;
+      }
+
+      .hero-subtitle {
+        font-size: 16px;
+      }
+
+      .panel-head,
+      .meal-head {
+        display: grid;
+      }
+
+      .panel-head p,
+      .meal-head p {
+        text-align: left;
+      }
+
+      .workflow-grid,
+      .library-grid,
+      .gate-list,
+      .menu-lanes,
+      .metric-strip,
+      .action-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .detail-title {
+        display: grid;
+      }
+
+      .detail-row {
+        grid-template-columns: 78px minmax(0, 1fr);
+      }
+
+      .table-wrap {
+        display: none;
+      }
+
+      .supplier-card-list {
+        display: grid;
+      }
+
+      .filter {
+        font-size: 13px;
+        padding: 7px 9px;
+      }
+
+      .pill {
+        white-space: normal;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header class="app-header">
+    <div>
+      <strong>Star Chef - AI Menu Engine v0.8a</strong>
+      <span>Supplier Product Pool Import / 华住项目 · 上海江桥</span>
+    </div>
+    <nav class="top-nav" aria-label="页面导航">
+      <a href="./index.html">首页</a>
+      <a href="./v08-menu-operations-loop.html">v0.8 循环引擎</a>
+      <a href="./star-chef-supplier-preview/">供应商协同页</a>
+      <a href="./v07-database-test.html">v0.7 数据库测试</a>
+    </nav>
+  </header>
+
+  <main>
+    <div id="hero"></div>
+    <div id="workflow"></div>
+    <div id="supplier"></div>
+    <div id="libraries"></div>
+    <div id="menu"></div>
+    <div id="quality"></div>
+  </main>
+
+  <footer class="page-footer">
+    Star Chef v0.8a 是供应商报价、新品、时令菜进入菜单引擎前的治理样机。页面使用样本数据，不包含真实采购合同或真实毛利。
+  </footer>
+
+  <script src="./v08a-supplier-product-pool-data.js"></script>
+  <script src="./v08a-supplier-product-pool-app.js"></script>
+</body>
+</html>

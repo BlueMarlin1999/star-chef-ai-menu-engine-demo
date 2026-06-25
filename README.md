@@ -2,7 +2,7 @@
 
 Internal review and build package for the Huazhu / Shanghai Jiangqiao pilot.
 
-Current version: **v0.8 Menu Operations Loop**.
+Current version: **v0.8a Supplier Product Pool Import**.
 
 ## Current Status
 
@@ -14,13 +14,17 @@ Star Chef has moved from a static menu prototype into a database-first system bu
 - v0.6: PostgreSQL schema, API contract, database operations runbook, and data governance model.
 - v0.7: Docker/PostgreSQL test toolkit with Huazhu seed data, native PostgreSQL fallback, and smoke tests.
 - v0.8: Menu Operations Loop, reframing Star Chef from prompt-based AI output into auditable operating loops.
+- v0.8a: Supplier product pool import, mapping supplier quotes, new products, and seasonal dishes to product library, SOP, price database, menu rules, AI candidate menus, and manual adjustment actions.
 
 ## Key Links
 
 - Public home: https://bluemarlin1999.github.io/star-chef-ai-menu-engine-demo/
+- v0.8a supplier product pool import: [v08a-supplier-product-pool.html](./v08a-supplier-product-pool.html)
 - Supplier collaboration preview: [star-chef-supplier-preview/](./star-chef-supplier-preview/)
 - Progress and todo: [STAR_CHEF_PROGRESS_AND_TODO.md](./STAR_CHEF_PROGRESS_AND_TODO.md)
 - v0.8 menu operations loop: [v08-menu-operations-loop.html](./v08-menu-operations-loop.html)
+- v0.8a design spec: [docs/superpowers/specs/2026-06-24-star-chef-v08a-supplier-product-pool-design.md](./docs/superpowers/specs/2026-06-24-star-chef-v08a-supplier-product-pool-design.md)
+- v0.8a implementation plan: [docs/superpowers/plans/2026-06-24-star-chef-v08a-supplier-product-pool.md](./docs/superpowers/plans/2026-06-24-star-chef-v08a-supplier-product-pool.md)
 - v0.8 design spec: [docs/superpowers/specs/2026-06-16-star-chef-v08-menu-operations-loop-design.md](./docs/superpowers/specs/2026-06-16-star-chef-v08-menu-operations-loop-design.md)
 - v0.8 implementation plan: [docs/superpowers/plans/2026-06-16-star-chef-v08-menu-operations-loop.md](./docs/superpowers/plans/2026-06-16-star-chef-v08-menu-operations-loop.md)
 - v0.7 database test page: [v07-database-test.html](./v07-database-test.html)

@@ -48,6 +48,18 @@ const checks = [
     markers: ["renderStarChefV08", "renderLoops", "acceptanceGates"],
   },
   {
+    file: "v08a-supplier-product-pool-data.js",
+    markers: ["__STAR_CHEF_V08A_DATA__", "Supplier Product Pool Import", "高山春笋", "奥尔良鸡腿排", "menuCandidate"],
+  },
+  {
+    file: "v08a-supplier-product-pool.html",
+    markers: ["Star Chef - AI Menu Engine v0.8a", "v08a-supplier-product-pool-data.js", "v08a-supplier-product-pool-app.js"],
+  },
+  {
+    file: "v08a-supplier-product-pool-app.js",
+    markers: ["renderStarChefV08A", "renderSupplierBoard", "renderSupplierCards", "renderMenuEngine", "manualActions"],
+  },
+  {
     file: "docs/superpowers/specs/2026-06-16-star-chef-v08-menu-operations-loop-design.md",
     markers: ["Menu Operations Loop", "Supplier Quote Import Loop", "Quality Gate and Approval Loop"],
   },
@@ -56,8 +68,16 @@ const checks = [
     markers: ["Implementation Plan", "v08-menu-operations-loop.html", "node scripts/run-v07-db-test.mjs"],
   },
   {
+    file: "docs/superpowers/specs/2026-06-24-star-chef-v08a-supplier-product-pool-design.md",
+    markers: ["Supplier Product Pool Import", "four-library mapping", "manual adjustment"],
+  },
+  {
+    file: "docs/superpowers/plans/2026-06-24-star-chef-v08a-supplier-product-pool.md",
+    markers: ["Implementation Plan", "v08a-supplier-product-pool.html", "Supplier filter changes visible rows"],
+  },
+  {
     file: "index.html",
-    markers: ["v0.8 菜单运营循环", "v08-menu-operations-loop.html", "v0.7 数据库测试工具包"],
+    markers: ["v0.8a 供应商新品导入", "v08a-supplier-product-pool.html", "v0.8 菜单运营循环", "v0.7 数据库测试工具包"],
   },
 ];
 
