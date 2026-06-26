@@ -565,10 +565,10 @@
         <div class="v04-grid">
           <div class="v04-stat"><b>7</b><span>已完成阶段：v0.3 业务计算、v0.4 系统建设、v0.5 系统骨架、v0.6 数据库、v0.7 测试工具包、v0.8 循环设计、v0.8a 供应商新品导入样机。</span></div>
           <div class="v04-stat"><b>4库</b><span>v0.8a 映射对象：产品库、SOP 库、价格资料库、菜单规则库。</span></div>
-          <div class="v04-stat"><b>P0</b><span>当前阻断：真实 Excel 导入服务和云端 staging 数据库仍未连接，页面使用样本数据演示流程。</span></div>
+          <div class="v04-stat"><b>939</b><span>已读取蓝鼎 2026 年 6 月上海 sheet 真实报价行，并在公开页展示脱敏摘要。</span></div>
           <div class="v04-stat"><b>1</b><span>先跑通华住供应商报价和新品导入闭环，再扩展成本卡、周菜单和审批流。</span></div>
         </div>
-        <p class="highlight">当前策略：供应商新品不能直接进入菜单。系统必须先保留原始行，再完成标准化、四库映射、门禁判断和人工动作记录。P0 门禁未通过前，不展示真实毛利，不生成正式采购单。</p>
+        <p class="highlight">当前策略：供应商新品不能直接进入菜单。系统必须先保留原始行，再完成标准化、四库映射、门禁判断和人工动作记录。公开页面只展示脱敏统计、价格区间和缺口，不展示逐行精确报价，不生成正式采购单。</p>
         <div class="v04-actions">
           <a href="./v08a-supplier-product-pool.html">打开 v0.8a 供应商新品导入</a>
           <a href="./star-chef-supplier-preview/">打开供应商协同预览</a>
@@ -587,10 +587,10 @@
       </div>
       <div class="section-body">
         <div class="v04-grid">
-          <div class="v04-stat"><b>12</b><span>供应商候选产品：高山春笋、奥尔良鸡腿排、藤椒鱼片、小龙虾尾、南昌拌粉料包等。</span></div>
+          <div class="v04-stat"><b>18</b><span>从真实报价表生成公开脱敏候选物料，并保留高山春笋、奥尔良鸡腿排等样本候选用于流程演示。</span></div>
           <div class="v04-stat"><b>4</b><span>候选分层：可入菜单、需试推、需人工确认、高风险阻断。</span></div>
-          <div class="v04-stat"><b>3餐</b><span>早餐、午餐、晚餐分别按真实开放档口生成菜单候选。</span></div>
-          <div class="v04-stat"><b>6类</b><span>人工动作：锁定、替换、试推、补 SOP、改规格、阻断。</span></div>
+          <div class="v04-stat"><b>148</b><span>真实报价导入发现缺价格行，需要采购经理补价或标记停用。</span></div>
+          <div class="v04-stat"><b>55</b><span>真实报价导入发现缺规格行，会影响单位换算、成本卡和采购拆分。</span></div>
         </div>
         <p class="highlight">v0.8a 的核心价值：让采购经理、厨师长和运营经理在同一个页面看到供应商报价如何变成候选菜、哪些能进菜单、哪些必须试推、哪些因为 SOP/EHS/价格风险被阻断。</p>
         <div class="v04-actions">

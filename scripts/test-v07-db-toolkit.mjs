@@ -52,12 +52,20 @@ const checks = [
     markers: ["__STAR_CHEF_V08A_DATA__", "Supplier Product Pool Import", "高山春笋", "奥尔良鸡腿排", "menuCandidate"],
   },
   {
+    file: "v08a-supplier-import-summary.js",
+    markers: ["__STAR_CHEF_V08A_IMPORT_SUMMARY__", "public_sanitized", "row_count", "public_candidates", "缺价格"],
+  },
+  {
     file: "v08a-supplier-product-pool.html",
-    markers: ["Star Chef - AI Menu Engine v0.8a", "v08a-supplier-product-pool-data.js", "v08a-supplier-product-pool-app.js"],
+    markers: ["Star Chef - AI Menu Engine v0.8a", "import-summary", "v08a-supplier-import-summary.js", "v08a-supplier-product-pool-data.js", "v08a-supplier-product-pool-app.js"],
   },
   {
     file: "v08a-supplier-product-pool-app.js",
-    markers: ["renderStarChefV08A", "renderSupplierBoard", "renderSupplierCards", "renderMenuEngine", "manualActions"],
+    markers: ["renderStarChefV08A", "renderImportSummary", "renderSupplierBoard", "renderSupplierCards", "renderMenuEngine", "manualActions"],
+  },
+  {
+    file: "scripts/import-v08a-supplier-quotes.py",
+    markers: ["public_sanitized", "private_raw_exact_prices", "price_band", "蓝鼎2026年6月供应商报价单.xlsx"],
   },
   {
     file: "docs/superpowers/specs/2026-06-16-star-chef-v08-menu-operations-loop-design.md",

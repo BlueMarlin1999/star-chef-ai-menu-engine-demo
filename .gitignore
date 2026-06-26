@@ -1,3 +1,6 @@
 .vercel
 screenshots
 scripts
+output/
+tmp/
+data/private/

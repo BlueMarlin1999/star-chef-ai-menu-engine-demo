@@ -2,7 +2,7 @@
 
 Internal review and build package for the Huazhu / Shanghai Jiangqiao pilot.
 
-Current version: **v0.8a Supplier Product Pool Import**.
+Current version: **v0.8a Supplier Product Pool Import + Sanitized Quote Import Summary**.
 
 ## Current Status
 
@@ -15,11 +15,13 @@ Star Chef has moved from a static menu prototype into a database-first system bu
 - v0.7: Docker/PostgreSQL test toolkit with Huazhu seed data, native PostgreSQL fallback, and smoke tests.
 - v0.8: Menu Operations Loop, reframing Star Chef from prompt-based AI output into auditable operating loops.
 - v0.8a: Supplier product pool import, mapping supplier quotes, new products, and seasonal dishes to product library, SOP, price database, menu rules, AI candidate menus, and manual adjustment actions.
+- v0.8a import summary: BlueDing June 2026 supplier quote workbook has been read for the Shanghai sheet. The public page displays only sanitized statistics, price bands, data gaps, and candidate items; full raw rows with exact prices remain in `data/private/` and are not committed.
 
 ## Key Links
 
 - Public home: https://bluemarlin1999.github.io/star-chef-ai-menu-engine-demo/
 - v0.8a supplier product pool import: [v08a-supplier-product-pool.html](./v08a-supplier-product-pool.html)
+- v0.8a sanitized supplier quote import data: [v08a-supplier-import-summary.js](./v08a-supplier-import-summary.js)
 - Supplier collaboration preview: [star-chef-supplier-preview/](./star-chef-supplier-preview/)
 - Progress and todo: [STAR_CHEF_PROGRESS_AND_TODO.md](./STAR_CHEF_PROGRESS_AND_TODO.md)
 - v0.8 menu operations loop: [v08-menu-operations-loop.html](./v08-menu-operations-loop.html)
@@ -41,6 +43,12 @@ Static toolkit check:
 node scripts/test-v07-db-toolkit.mjs
 ```
 
+Regenerate the sanitized supplier quote import summary from the local BlueDing workbook:
+
+```bash
+python3 scripts/import-v08a-supplier-quotes.py
+```
+
 Live PostgreSQL smoke test. The runner uses Docker when the Docker daemon is available; otherwise it falls back to a local Homebrew PostgreSQL 16+ installation:
 
 ```bash
@@ -55,4 +63,4 @@ After a native fallback run, inspect the temporary database with:
 
 ## Scope Note
 
-The original Excel workbooks and source screenshots are not included in this public demo repository. This repository is for internal product, data, and operating-model review.
+The original Excel workbooks, source screenshots, and private raw import JSON are not included in this public demo repository. This repository is for internal product, data, and operating-model review.

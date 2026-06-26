@@ -199,6 +199,196 @@
       font-weight: 720;
     }
 
+    .import-layout {
+      display: grid;
+      gap: 14px;
+      min-width: 0;
+    }
+
+    .import-metrics {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 10px;
+    }
+
+    .import-metric,
+    .import-panel,
+    .privacy-note {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #fff;
+      min-width: 0;
+    }
+
+    .import-metric {
+      padding: 14px;
+    }
+
+    .import-metric span {
+      display: block;
+      color: var(--muted);
+      font-size: 13px;
+      font-weight: 900;
+      margin-bottom: 7px;
+    }
+
+    .import-metric strong {
+      display: block;
+      color: var(--brand);
+      font-size: 25px;
+      line-height: 1.08;
+      margin-bottom: 7px;
+    }
+
+    .import-metric p {
+      color: var(--muted);
+      font-size: 14px;
+      font-weight: 720;
+    }
+
+    .import-panel {
+      padding: 15px;
+      display: grid;
+      gap: 12px;
+    }
+
+    .import-panel.full {
+      grid-column: 1 / -1;
+    }
+
+    .import-panel h3 {
+      color: var(--brand-dark);
+      font-size: 18px;
+      line-height: 1.25;
+    }
+
+    .gate-mini-list {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 10px;
+    }
+
+    .gate-mini {
+      border: 1px solid #e0e9ef;
+      border-radius: 8px;
+      background: #fbfdfe;
+      padding: 12px;
+      display: grid;
+      gap: 7px;
+      min-width: 0;
+    }
+
+    .gate-mini h4,
+    .candidate-card h4 {
+      color: var(--brand-dark);
+      font-size: 15px;
+      line-height: 1.25;
+    }
+
+    .gate-mini strong {
+      color: var(--ink);
+      font-size: 17px;
+      line-height: 1.2;
+    }
+
+    .gate-mini p,
+    .candidate-card p,
+    .candidate-card small,
+    .privacy-note p,
+    .privacy-note small {
+      color: var(--muted);
+      font-size: 13px;
+      font-weight: 720;
+    }
+
+    .category-bars {
+      display: grid;
+      gap: 10px;
+    }
+
+    .category-row {
+      display: grid;
+      grid-template-columns: minmax(92px, .22fr) minmax(190px, .52fr) minmax(150px, .38fr);
+      gap: 8px;
+      align-items: center;
+      padding-bottom: 10px;
+      border-bottom: 1px solid #e7eef4;
+    }
+
+    .category-row:last-child {
+      border-bottom: 0;
+      padding-bottom: 0;
+    }
+
+    .category-row b {
+      color: var(--brand-dark);
+      font-size: 14px;
+    }
+
+    .category-row span {
+      color: var(--muted);
+      font-size: 13px;
+      font-weight: 820;
+    }
+
+    .category-row em {
+      grid-column: 1 / -1;
+      color: var(--muted);
+      font-style: normal;
+      font-size: 12px;
+      font-weight: 720;
+    }
+
+    .bar-track {
+      height: 9px;
+      border-radius: 999px;
+      background: #e5eef4;
+      overflow: hidden;
+    }
+
+    .bar-fill {
+      display: block;
+      height: 100%;
+      border-radius: inherit;
+      background: var(--brand);
+    }
+
+    .candidate-grid {
+      display: grid;
+      grid-template-columns: repeat(5, minmax(0, 1fr));
+      gap: 10px;
+    }
+
+    .candidate-card {
+      border: 1px solid #e0e9ef;
+      border-radius: 8px;
+      background: #fbfdfe;
+      padding: 12px;
+      display: grid;
+      gap: 7px;
+      min-width: 0;
+    }
+
+    .candidate-code {
+      color: var(--accent);
+      font-size: 12px;
+      font-weight: 950;
+    }
+
+    .privacy-note {
+      padding: 13px 14px;
+      display: grid;
+      grid-template-columns: auto minmax(0, 1fr);
+      gap: 6px 10px;
+      align-items: start;
+      background: #f8fbfd;
+      border-left: 5px solid var(--brand);
+    }
+
+    .privacy-note small {
+      grid-column: 2;
+    }
+
     .panel {
       background: var(--panel);
       border: 1px solid var(--line);
@@ -742,6 +932,9 @@
       .library-grid,
       .gate-list,
       .menu-lanes,
+      .import-metrics,
+      .gate-mini-list,
+      .candidate-grid,
       .metric-strip {
         grid-template-columns: repeat(2, minmax(0, 1fr));
       }
@@ -823,9 +1016,21 @@
       .library-grid,
       .gate-list,
       .menu-lanes,
+      .import-metrics,
+      .gate-mini-list,
+      .candidate-grid,
       .metric-strip,
       .action-grid {
         grid-template-columns: 1fr;
+      }
+
+      .category-row,
+      .privacy-note {
+        grid-template-columns: 1fr;
+      }
+
+      .privacy-note small {
+        grid-column: 1;
       }
 
       .detail-title {
@@ -871,6 +1076,7 @@
 
   <main>
     <div id="hero"></div>
+    <div id="import-summary"></div>
     <div id="workflow"></div>
     <div id="supplier"></div>
     <div id="libraries"></div>
@@ -882,6 +1088,7 @@
     Star Chef v0.8a 是供应商报价、新品、时令菜进入菜单引擎前的治理样机。页面使用样本数据，不包含真实采购合同或真实毛利。
   </footer>
 
+  <script src="./v08a-supplier-import-summary.js"></script>
   <script src="./v08a-supplier-product-pool-data.js"></script>
   <script src="./v08a-supplier-product-pool-app.js"></script>
 </body>

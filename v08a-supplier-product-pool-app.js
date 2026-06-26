@@ -1,5 +1,6 @@
 (function renderStarChefV08A() {
   const data = window.__STAR_CHEF_V08A_DATA__;
+  const importSummary = window.__STAR_CHEF_V08A_IMPORT_SUMMARY__;
   if (!data) return;
 
   const state = {
@@ -79,6 +80,11 @@
     return el("span", `pill ${tone}`, text);
   }
 
+  function percent(value) {
+    if (typeof value !== "number") return "-";
+    return `${Math.round(value * 1000) / 10}%`;
+  }
+
   function list(items, className = "tight-list") {
     const ul = el("ul", className);
     items.forEach((item) => ul.appendChild(el("li", "", item)));
@@ -128,6 +134,85 @@
 
     append(wrapper, [copy, operation, metrics]);
     target.replaceChildren(wrapper);
+  }
+
+  function renderImportSummary() {
+    if (!importSummary) return;
+
+    const summary = importSummary.summary;
+    const wrap = el("div", "import-layout");
+    const metrics = el("div", "import-metrics");
+    [
+      ["真实报价行", `${summary.row_count}`, `${importSummary.sheet_name} sheet / ${importSummary.source_file}`],
+      ["供应商主体", `${summary.supplier_count} 家`, "后续用于保供、账期和履约评分。"],
+      ["缺价格", `${summary.missing_price_count} 行`, "不能直接进入自动菜单候选。"],
+      ["缺规格", `${summary.missing_spec_count} 行`, "影响单位换算、成本卡和采购拆分。"],
+    ].forEach(([label, value, note]) => {
+      const metric = el("article", "import-metric");
+      append(metric, [el("span", "", label), el("strong", "", value), el("p", "", note)]);
+      metrics.appendChild(metric);
+    });
+
+    const gates = el("div", "import-panel");
+    const gateList = el("div", "gate-mini-list");
+    importSummary.gate_status.forEach((gate) => {
+      const node = el("article", "gate-mini");
+      append(node, [
+        pill(statusText(gate.status), statusClass(gate.status)),
+        el("h4", "", gate.gate),
+        el("strong", "", gate.value),
+        el("p", "", gate.detail),
+      ]);
+      gateList.appendChild(node);
+    });
+    append(gates, [el("h3", "", "导入门禁"), gateList]);
+
+    const categories = el("div", "import-panel");
+    const categoryList = el("div", "category-bars");
+    importSummary.category_quality.slice(0, 8).forEach((category) => {
+      const row = el("div", "category-row");
+      const bar = el("span", "bar-track");
+      const fill = el("i", "bar-fill");
+      fill.style.width = `${Math.round(category.price_coverage * 100)}%`;
+      bar.appendChild(fill);
+      append(row, [
+        el("b", "", category.category),
+        el("span", "", `${category.row_count} 行 / 报价覆盖 ${percent(category.price_coverage)}`),
+        bar,
+        el("em", "", `${category.public_price_band} · 缺价 ${category.missing_price_count} 行`),
+      ]);
+      categoryList.appendChild(row);
+    });
+    append(categories, [el("h3", "", "品类覆盖与价格完整性"), categoryList]);
+
+    const candidates = el("div", "import-panel full");
+    const candidateGrid = el("div", "candidate-grid");
+    importSummary.public_candidates.slice(0, 10).forEach((candidate) => {
+      const node = el("article", "candidate-card");
+      append(node, [
+        el("span", "candidate-code", candidate.item_code),
+        el("h4", "", candidate.item_name),
+        el("p", "", `${candidate.category} / ${candidate.price_band} / ${candidate.spec_status}`),
+        el("small", "", candidate.mapping_hint),
+      ]);
+      if (candidate.gaps.length) {
+        node.appendChild(pill(candidate.gaps.join("、"), "warn"));
+      } else {
+        node.appendChild(pill("字段可进入映射", "ok"));
+      }
+      candidateGrid.appendChild(node);
+    });
+    append(candidates, [el("h3", "", "公开脱敏候选物料"), candidateGrid]);
+
+    const privacy = el("div", "privacy-note");
+    append(privacy, [
+      pill("公开脱敏", "ok"),
+      el("p", "", "公开页只展示统计、区间和候选摘要；完整原始行和精确报价保存在本地私有 JSON，不提交公开仓库。"),
+      el("small", "", importSummary.column_interpretation.note),
+    ]);
+
+    append(wrap, [metrics, gates, categories, candidates, privacy]);
+    section("import-summary", "真实供应商报价导入摘要", "蓝鼎 2026 年 6 月报价已读取上海项目 sheet，先做数据门禁和候选物料摘要，再进入产品库 / SOP / 价格资料库映射。", wrap);
   }
 
   function renderWorkflow() {
@@ -401,6 +486,7 @@
 
   function renderAll() {
     renderHero();
+    renderImportSummary();
     renderWorkflow();
     renderSupplierBoard();
     renderLibraries();
